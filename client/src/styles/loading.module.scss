@@ -1,0 +1,45 @@
+.loadingContainer {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  .loadingPointContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .loadingPoint {
+      height: 10px;
+      width: 10px;
+      border-radius: 50%;
+      background-color: #333;
+      margin: 0 5px;
+      animation: tides 1s ease-in-out infinite;
+
+      &:nth-child(1) {
+        animation-delay: 0s;
+      }
+
+      &:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+
+      &:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+    }
+  }
+}
+
+@keyframes tides {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}

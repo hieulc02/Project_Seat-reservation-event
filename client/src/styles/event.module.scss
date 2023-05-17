@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  .eventLink {
+    text-decoration: none;
+    .eventCard {
+      box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+      margin: 0.5rem;
+      padding: 5px;
+      .eventName {
+        margin: 1px;
+      }
+      .eventDescription {
+        margin: 1px;
+      }
+      .eventSeat {
+        margin: 1px;
+      }
+    }
+  }
+}

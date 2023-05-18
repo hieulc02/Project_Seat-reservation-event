@@ -8,13 +8,11 @@ const ButtonLogout = () => {
       const doc = await logout();
       if (!doc) return;
       toast.success(doc.status);
-      localStorage.clear();
-      Router.push(`/login`);
     } catch (e) {
       console.log(e);
     }
   };
-  return <button onClick={handleClick}>Log out</button>;
+  return <button onClick={handleClick}>Logout</button>;
 };
 
 export default ButtonLogout;

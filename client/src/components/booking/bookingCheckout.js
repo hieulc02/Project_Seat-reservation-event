@@ -5,8 +5,7 @@ import { getUser } from '../../actions/handleUser';
 import { toast } from 'react-toastify';
 import Router from 'next/router';
 
-const BookingCheckout = ({ selectedSeats, ticketPrice }) => {
-  const user = getUser();
+const BookingCheckout = ({ user, selectedSeats, ticketPrice }) => {
   let event;
   if (selectedSeats) {
     event = selectedSeats[0]?.eventId;
@@ -15,6 +14,7 @@ const BookingCheckout = ({ selectedSeats, ticketPrice }) => {
   let total = selectedSeats.length;
   const handleClick = async () => {
     try {
+      const user = await getUser();
       const res = await createReservation({
         selectedSeats,
         total,

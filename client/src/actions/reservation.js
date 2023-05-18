@@ -1,18 +1,18 @@
 import apiEndpoint from '../apiConfig';
 import axios from 'axios';
-import { getToken } from './handleUser';
+import cookie from 'js-cookie';
 
-const API = `${apiEndpoint}/api/reservation`;
+export const Axios = axios.create({
+  baseURL: `${apiEndpoint}/api/reservation`,
+  withCredentials: true,
+  headers: {
+    Authorization: `Bearer ${cookie.get('token')}`,
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
+});
 export const createReservation = async (reservation) => {
-  const token = getToken();
-  const res = await axios.post(API, reservation, {
-    withCredentials: true,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  });
-
+  const res = await Axios.post('/', reservation);
+  console.log(res);
   return res.data;
 };

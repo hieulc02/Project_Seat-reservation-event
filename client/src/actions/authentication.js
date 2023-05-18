@@ -1,38 +1,36 @@
 import axios from 'axios';
 import apiEndpoint from '../apiConfig';
-import { setUser, setToken } from './handleUser';
-//import { cookies } from 'next/headers';
-
+import cookie from 'js-cookie';
+import Router from 'next/router';
+import { isAuth } from './handleUser';
+export const Axios = axios.create({
+  baseURL: `${apiEndpoint}/api/users`,
+  withCredentials: true,
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+  },
+});
 export const login = async (email, password) => {
-  const user = { email, password };
-  const res = await axios.post(`${apiEndpoint}/api/users/login`, user, {
-    withCredentials: true,
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  });
-  console.log(res);
-  if (res.status === 200) {
-    const { user, token } = res.data;
-    user && setUser(user);
-    setToken(token);
-  }
+  const res = await Axios.post(`/login`, { email, password });
+  setToken(res.data?.token);
   return res.data;
 };
 
 export const signup = async (user) => {
-  const res = await axios.post(`${apiEndpoint}/api/users/signup`, user, {
-    withCredentials: true,
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  });
+  const res = await axios.post('/signup', user);
+  setToken(res.data?.token);
   return res.data;
 };
 
 export const logout = async () => {
-  const res = await axios.get(`${apiEndpoint}/api/users/logout`);
+  const res = await Axios.get('/logout');
+  cookie.remove('token');
+  Router.push('/login');
   return res.data;
+};
+
+const setToken = (token) => {
+  cookie.set('token', token, { secure: true });
+  isAuth() ? Router.push(`/admin`) : Router.push(`/`);
 };

@@ -26,7 +26,6 @@ const createSendToken = (user, statusCode, req, res) => {
   res.status(statusCode).json({
     status: `${event} successfully`,
     token,
-    user,
   });
   // res.send({ user, token });
 };
@@ -63,13 +62,13 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 
   const user = await User.findOne({ email }).select('+password');
-  req.session.regenerate(function (e) {
-    if (e) next(e);
-    req.session.user = user;
-    req.session.save(function (e) {
-      if (e) return next(e);
-    });
-  });
+  // req.session.regenerate(function (e) {
+  //   if (e) next(e);
+  //   req.session.user = user;
+  //   req.session.save(function (e) {
+  //     if (e) return next(e);
+  //   });
+  // });
   if (!user || !(await user.correctPassword(password, user.password))) {
     //return next(new AppError('Incorrect email or password', 401));
     return res.status(401).json({
@@ -83,10 +82,10 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.logout = catchAsync(async (req, res, next) => {
   res.clearCookie('jwt');
-  res.cookie('jwt', 'logged-out', {
-    expires: new Date(Date.now() + 10 * 1000),
-    httpOnly: true,
-  });
+  // res.cookie('jwt', 'logged-out', {
+  //   expires: new Date(Date.now() + 10 * 1000),
+  //   httpOnly: true,
+  // });
   res.status(200).json({ status: 'Successful logout' });
 });
 

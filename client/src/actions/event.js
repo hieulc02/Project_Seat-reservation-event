@@ -1,30 +1,27 @@
 import apiEndpoint from '../apiConfig';
 import axios from 'axios';
-import { getToken } from './handleUser';
+import cookie from 'js-cookie';
 
-const API = `${apiEndpoint}/api/events`;
+export const Axios = axios.create({
+  baseURL: `${apiEndpoint}/api/events`,
+  withCredentials: true,
+  headers: {
+    Authorization: `Bearer ${cookie.get('token')}`,
+  },
+});
 export const createEvent = async (event) => {
-  const token = getToken();
-  const res = await axios.post(API, event, {
-    withCredentials: true,
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-  });
-
+  const res = await Axios.post('/', event);
   return res.data;
 };
 
 export const getAllEvent = async () => {
-  const res = await axios.get(API);
-  console.log(res.data.data.doc);
-  return res.data;
+  const res = await Axios.get();
+
+  return res.data.doc;
 };
 
 export const getEvent = async (id) => {
-  const res = await axios.get(`${API}/${id}`);
-  console.log(res.data.data.doc);
+  const res = await Axios.get(`/${id}`);
+  // console.log(res);
   return res.data;
 };

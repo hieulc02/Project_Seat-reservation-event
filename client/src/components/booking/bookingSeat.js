@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from '../../styles/seat.module.scss';
 import BookingCheckout from './bookingCheckout';
+
 const BookingSeat = ({ seatGrid, ticketPrice }) => {
   const [selectedSeats, setSelectedSeats] = useState([]);
   const handleSeatClick = (seat) => {

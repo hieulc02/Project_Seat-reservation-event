@@ -26,9 +26,7 @@ exports.createOne = (Model) =>
     const doc = await Model.create(req.body);
     res.status(201).json({
       status: 'success',
-      data: {
-        doc,
-      },
+      doc
     });
   });
 
@@ -59,9 +57,7 @@ exports.getOne = (Model) =>
     }
     res.status(200).json({
       status: 'success',
-      data: {
-        doc,
-      },
+      doc
     });
   });
 
@@ -70,8 +66,6 @@ exports.getAll = (Model) =>
     const doc = await Model.find({});
     res.status(200).json({
       status: 'success',
-      data: {
-        doc,
-      },
+      doc
     });
   });

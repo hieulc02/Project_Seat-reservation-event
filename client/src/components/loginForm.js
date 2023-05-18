@@ -19,10 +19,9 @@ const LoginForm = () => {
       const user = await login(email, userPassword);
       if (!user) return;
       toast.success(user.status);
-      Router.push('/');
     } catch (e) {
       //   console.log(e);
-      //  setErrors(e.response.data.error);
+      setErrors(e.response.data.error);
     }
   };
 

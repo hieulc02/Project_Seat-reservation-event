@@ -15,7 +15,7 @@ const createSendToken = (user, statusCode, req, res) => {
 
   res.cookie('jwt', token, {
     expires: new Date(Date.now() + 9000000 * 24 * 60),
-    httpOnly: true,
+   // httpOnly: true,
     secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
     sameSite: true,
   });
@@ -103,7 +103,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     //console.log(req.cookies);
   }
   //console.log(token);
-  if (!token) {
+  if (!token || token === 'null') {
     // return next(
     //   new AppError('You are not logged in! Please log in to get access', 401)
     // );
@@ -112,9 +112,9 @@ exports.protect = catchAsync(async (req, res, next) => {
     });
   }
 
-  const decode = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  const decode = await promisify(jwt?.verify)(token, process.env.JWT_SECRET);
   //console.log(decode);
-  const currentUser = await User.findById(decode.id);
+  const currentUser = await User.findById(decode?.id);
   //console.log(currentUser);
   if (!currentUser) {
     return next(

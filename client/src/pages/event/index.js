@@ -25,43 +25,45 @@ const ShowEvents = ({ events }) => {
       fetchData();
     }
   }, [events]);
-
   const isFull = data?.every((event) => event.seatAvailable === 0);
   return (
     <>
       {!data && <Loading />}
+      {data?.length === 0 && (
+        <div className={styles.noEvent}>
+          <h1> No event today </h1>
+        </div>
+      )}
+      {isFull && (
+        <div className={styles.isFull}>
+          <h1>Sorry, all shows is now full!</h1>
+        </div>
+      )}
       <Layout>
-        {data?.length === 0 && (
-          <div className={styles.noEvent}>
-            <h1> No event today </h1>
-          </div>
-        )}
         <div className={styles.container}>
-          {isFull && (
-            <div className={styles.isFull}>
-              <h1>Sorry, all shows is now full!</h1>
-            </div>
-          )}
-          {data?.map((event, i) => (
-            <React.Fragment key={i}>
-              {event.seatAvailable > 0 && (
-                <div key={event._id}>
-                  <Link
-                    href={`/event/${event._id}`}
-                    className={styles.eventLink}
-                  >
-                    <div className={styles.eventCard}>
-                      <p className={styles.eventName}>{event.name}</p>
-                      <p className={styles.eventDescription}>
-                        {event.description}
-                      </p>
-                      <p className={styles.eventSeat}>{event.seatAvailable}</p>
-                    </div>
-                  </Link>
-                </div>
-              )}
-            </React.Fragment>
-          ))}
+          {data &&
+            data?.map((event, i) => (
+              <React.Fragment key={i}>
+                {event.seatAvailable > 0 && (
+                  <div key={event._id}>
+                    <Link
+                      href={`/event/${event._id}`}
+                      className={styles.eventLink}
+                    >
+                      <div className={styles.eventCard}>
+                        <p className={styles.eventName}>{event.name}</p>
+                        <p className={styles.eventDescription}>
+                          {event.description}
+                        </p>
+                        <p className={styles.eventSeat}>
+                          {event.seatAvailable}
+                        </p>
+                      </div>
+                    </Link>
+                  </div>
+                )}
+              </React.Fragment>
+            ))}
         </div>
       </Layout>
     </>

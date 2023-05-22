@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { isAuth } from '../actions/handleUser';
 import { createEvent } from '../actions/event';
 import Router from 'next/router';
@@ -6,6 +6,7 @@ import styles from '../styles/event.module.scss';
 import { toast } from 'react-toastify';
 
 const AddEvent = () => {
+  const [isAdmin, setIsAdmin] = useState(false);
   const [event, setEvent] = useState({
     name: '',
     description: '',
@@ -15,6 +16,12 @@ const AddEvent = () => {
   });
   //  const [errors, setErrors] = useState('');
   const { name, description, row, col, ticketPrice } = event;
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsAdmin(await isAuth());
+    };
+    fetchData();
+  }, []);
   const handleChange = (name) => {
     return (e) => {
       setEvent({ ...event, [name]: e.target.value });
@@ -30,7 +37,7 @@ const AddEvent = () => {
       toast.error(e.response.data.error);
     }
   };
-  if (!isAuth()) {
+  if (!isAdmin) {
     return (
       <div>
         <h1>Access denied</h1>
@@ -39,7 +46,7 @@ const AddEvent = () => {
   }
   return (
     <>
-      {isAuth() && (
+      {isAdmin && (
         <div className={styles.container}>
           <div className={styles.wrapper}>
             <div className={styles.main}>

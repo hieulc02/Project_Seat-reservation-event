@@ -1,6 +1,6 @@
 import axios from 'axios';
 import apiEndpoint from '../apiConfig';
-import cookie from 'js-cookie';
+import Cookies from 'js-cookie';
 import Router from 'next/router';
 import { isAuth } from './handleUser';
 export const Axios = axios.create({
@@ -18,19 +18,19 @@ export const login = async (email, password) => {
 };
 
 export const signup = async (user) => {
-  const res = await axios.post('/signup', user);
+  const res = await Axios.post('/signup', user);
   setToken(res.data?.token);
   return res.data;
 };
 
 export const logout = async () => {
   const res = await Axios.get('/logout');
-  cookie.remove('token');
+  Cookies.remove('token');
   Router.push('/login');
   return res.data;
 };
 
 const setToken = (token) => {
-  cookie.set('token', token, { secure: true });
-  isAuth() ? Router.push(`/admin`) : Router.push(`/`);
+  Cookies.set('token', token);
+  //  isAuth() ? Router.push(`/admin`) : Router.push(`/`);
 };

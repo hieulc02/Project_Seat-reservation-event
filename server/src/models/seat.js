@@ -39,6 +39,19 @@ seatSchema.statics.reservedSeats = async function (reservedSeats, eventId) {
     throw new Error('Seat reservation fail!');
   }
 };
+
+seatSchema.statics.checkExistSeats = async function (reservedSeats, eventId) {
+  try {
+    const existingSeats = await this.find({
+      _id: { $in: reservedSeats },
+      eventId: eventId,
+      isOccupied: true,
+    });
+    return existingSeats;
+  } catch (e) {
+    throw new Error('Check seat fail');
+  }
+};
 const Seat = mongoose.model('Seat', seatSchema);
 
 module.exports = Seat;

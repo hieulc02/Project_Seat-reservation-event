@@ -16,6 +16,13 @@ exports.createReservationWithSeat = catchAsync(async (req, res, next) => {
       error: 'Please select a seat to proceed with the checkout',
     });
   }
+  const existingSeats = await Seat.checkExistSeats(selectedSeats, event);
+  if (existingSeats.length > 0) {
+    const reservedSeat = existingSeats.map((s) => ` ${s.row}-${s.col}`);
+    return res.json({
+      error: `Seat at: ${reservedSeat} already been reserved`,
+    });
+  }
   const updatedSeats = await Seat.reservedSeats(selectedSeats, event);
   await Event.seatUpdated(total, event);
   await reservation.save();

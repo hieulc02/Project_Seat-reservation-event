@@ -1,11 +1,12 @@
 import axios from 'axios';
-import cookie from 'js-cookie';
+import Cookies from 'js-cookie';
 import apiEndpoint from '../apiConfig';
+import Router from 'next/router';
 export const Axios = axios.create({
   baseURL: `${apiEndpoint}/api/users`,
   withCredentials: true,
   headers: {
-    Authorization: `Bearer ${cookie.get('token')}`,
+    Authorization: `Bearer ${Cookies.get('token' || 'jwt')}`,
     Accept: 'application/json',
     'Content-Type': 'application/json',
   },
@@ -17,12 +18,11 @@ export const getUser = async () => {
 };
 
 export const isAuth = async () => {
-  try {
-    const user = await getUser();
-    if (user.role === 'admin') return true;
+  const user = await getUser();
+  //console.log(user);
+  if (user?.role === 'admin') {
+    return true;
+  } else {
     return false;
-  } catch (e) {
-    console.log(e);
-    return;
   }
 };

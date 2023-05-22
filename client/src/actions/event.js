@@ -1,12 +1,12 @@
 import apiEndpoint from '../apiConfig';
 import axios from 'axios';
-import cookie from 'js-cookie';
+import Cookies from 'js-cookie';
 
 export const Axios = axios.create({
   baseURL: `${apiEndpoint}/api/events`,
   withCredentials: true,
   headers: {
-    Authorization: `Bearer ${cookie.get('token')}`,
+    Authorization: `Bearer ${Cookies.get('token' || 'jwt')}`,
   },
 });
 export const createEvent = async (event) => {
@@ -23,5 +23,10 @@ export const getAllEvent = async () => {
 export const getEvent = async (id) => {
   const res = await Axios.get(`/${id}`);
   // console.log(res);
+  return res.data;
+};
+
+export const deleteEvent = async (id) => {
+  const res = await Axios.delete(`/${id}`);
   return res.data;
 };

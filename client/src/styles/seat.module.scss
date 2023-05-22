@@ -30,6 +30,23 @@
         font-family: Arial, sans-serif; /* set the font family */
         cursor: pointer;
       }
+      .isTempSeat {
+        width: 40px;
+        height: 40px;
+        margin: 0.6rem;
+        display: flex;
+        align-items: center;
+        background: repeating-linear-gradient(
+          rgb(96, 93, 169),
+          rgb(96, 93, 169) 15px,
+          rgb(120, 205, 4) 10px,
+          rgb(120, 205, 4) 10px
+        );
+        justify-content: center;
+        color: #f1f3f5; /* set the text color */
+        font-family: Arial, sans-serif; /* set the font family */
+        cursor: pointer;
+      }
     }
   }
   .seatInfoContainer {

@@ -11,35 +11,40 @@ const BookingCheckout = ({ user, selectedSeats, ticketPrice }) => {
     event = selectedSeats[0]?.eventId;
   }
   // console.log(selectedSeats[0]);
-  let total = selectedSeats.length;
+  let total = selectedSeats?.length;
   const handleClick = async () => {
     try {
       const user = await getUser();
+      //console.log(user);
       const res = await createReservation({
         selectedSeats,
         total,
         user,
         event,
       });
-      if (!res) return;
-      toast.success(res.status);
+      if (!res.data) {
+        toast.error(res.error);
+        // console.log(res.error);
+        return;
+      }
+      toast.success(res?.status);
       Router.push(`/`);
     } catch (e) {
-      console.log(e.response.data.error);
-      toast.error(e.response.data.error);
+      console.log(e.response?.data.error);
+      toast.error(e.response?.data.error);
     }
   };
   return (
     <>
       <div className={styles.container}>
-        <div className={styles.ticket}>{selectedSeats.length} Tickets</div>
+        <div className={styles.ticket}>{selectedSeats?.length} Tickets</div>
         <div className={styles.price}>
-          {selectedSeats.length * ticketPrice} &#x20AB;
+          {selectedSeats?.length * ticketPrice} &#x20AB;
         </div>
         <div className={styles.seatContainer}>
           <>
             Seat:
-            {selectedSeats.map((s, i) => (
+            {selectedSeats?.map((s, i) => (
               <div className={styles.seat} key={i}>
                 {s.row}-{s.col}
               </div>
@@ -47,9 +52,11 @@ const BookingCheckout = ({ user, selectedSeats, ticketPrice }) => {
           </>
         </div>
         <div className={styles.checkout}>
-          <button onClick={handleClick} className={styles.button}>
-            Checkout
-          </button>
+          {selectedSeats?.length > 0 && (
+            <button onClick={handleClick} className={styles.button}>
+              Checkout
+            </button>
+          )}
         </div>
       </div>
     </>

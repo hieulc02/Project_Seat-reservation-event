@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const app = require('./app');
+const server = require('./app');
 
 const port = process.env.PORT || 3001;
 
@@ -14,6 +15,6 @@ mongoose
     console.log('connect success');
   });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`listen on ${port}...`);
 });

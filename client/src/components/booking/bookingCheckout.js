@@ -14,7 +14,6 @@ const BookingCheckout = ({ user, selectedSeats, ticketPrice }) => {
   let total = selectedSeats?.length;
   const handleClick = async () => {
     try {
-      const user = await getUser();
       //console.log(user);
       const res = await createReservation({
         selectedSeats,

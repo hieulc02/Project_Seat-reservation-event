@@ -6,6 +6,7 @@ import ButtonLogout from '../components/logout';
 import Navbar from '../components/navbar';
 import axios from 'axios';
 import apiEndpoint from '../apiConfig';
+import { cookies } from 'next/dist/client/components/headers';
 // import Link from 'next/link';
 
 const Home = ({ user }) => {

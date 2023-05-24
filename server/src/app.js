@@ -5,7 +5,6 @@ const app = express();
 const dotenv = require('dotenv');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const session = require('express-session');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, {
   cors: {
@@ -13,7 +12,7 @@ const io = require('socket.io')(server, {
     methods: ['GET', 'POST'],
   },
 });
-const eventController = require('./controller/eventController');
+
 const userRoute = require('./route/userRoute');
 const eventRoute = require('./route/eventRoute');
 const resRoute = require('./route/reservationRoute');
@@ -35,24 +34,14 @@ app.use(
 );
 app.use(bodyParser.json());
 app.use(express.json());
-//app.use(express.static(path.join(__dirname, '/public')));
-// app.use(
-//   session({
-//     secret: process.env.SESSION_SECRET,
-//     resave: false,
-//     saveUninitialized: true,
-//     cookie: {
-//       maxAge: 1000 * 60 * 60,
-//       sameSite: true,
-//     },
-//   })
-// );
 
 app.use((req, res, next) => {
   //console.log(req.headers);
-  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'GET, POST, PUT, PATCH, DELETE'
+  );
   //res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
@@ -60,32 +49,47 @@ app.use((req, res, next) => {
 const setToRoom = new Set();
 io.on('connection', (socket) => {
   console.log('new client', socket.id);
-
   socket.on('join-room', (room) => {
     socket.join(room);
-    socket.broadcast.to(room).emit('seat-book', [...setToRoom.values()]);
+    const serializedSet = [...setToRoom.values()];
+    socket.to(room).emit('seat-book', serializedSet);
   });
+
   socket.on('leave-room', (room) => {
     socket.leave(room);
+    setToRoom.forEach((s) => {
+      if (s.room === room) {
+        setToRoom.delete(s);
+      }
+    });
+    const serializedSet = [...setToRoom.values()];
+    socket.broadcast.to(s.room).emit('seat-book', serializedSet);
   });
+
   socket.on('disconnect', () => {
-    setToRoom.clear();
+    setToRoom.forEach((s) => {
+      if (s.socketId === socket.id) {
+        setToRoom.delete(s);
+        const serializedSet = [...setToRoom.values()];
+        socket.broadcast.to(s.room).emit('seat-book', serializedSet);
+      }
+    });
   });
+
   socket.on('seat-book', (params) => {
-    //   console.log(params.state);
     if (params.state) {
-      setToRoom?.add(params);
+      setToRoom.add({ ...params, socketId: socket.id });
     } else {
-      setToRoom?.forEach((s) => {
+      setToRoom.forEach((s) => {
         if (s.seatId === params.seatId) {
-          setToRoom?.delete(s);
+          setToRoom.delete(s);
         }
       });
     }
-    socket.broadcast.to(params.room).emit('seat-book', [...setToRoom.values()]);
+    const serializedSet = [...setToRoom.values()];
+    socket.broadcast.to(params.room).emit('seat-book', serializedSet);
   });
 });
-
 app.use('/api/users', userRoute);
 app.use('/api/events', eventRoute);
 app.use('/api/reservation', resRoute);

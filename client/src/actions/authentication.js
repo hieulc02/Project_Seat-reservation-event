@@ -30,7 +30,6 @@ export const logout = async () => {
   return res.data;
 };
 
-const setToken = (token) => {
-  Cookies.set('token', token);
-  //  isAuth() ? Router.push(`/admin`) : Router.push(`/`);
+export const setToken = (token) => {
+  Cookies.set('token', token, { secure: true, expires: 365 });
 };

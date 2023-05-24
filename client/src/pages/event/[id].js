@@ -1,13 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/router';
 import { getEvent } from '../../actions/event';
 import Layout from '../../components/layout';
 import Loading from '../../components/loading';
 import io from 'socket.io-client';
 import styles from '../../styles/seat.module.scss';
+import axios from 'axios';
 import BookingCheckout from '../../components/booking/bookingCheckout';
 import apiEndpoint from '../../apiConfig';
 
-const Event = ({ id }) => {
+const Event = ({ id, user }) => {
+  const router = useRouter();
   const socket = useRef(null);
   const eventRoom = `event/${id}`;
   const [tempSeat, setTempSeat] = useState({});
@@ -40,6 +43,29 @@ const Event = ({ id }) => {
   }, [id]);
 
   useEffect(() => {
+    const handleRouteChange = (url) => {
+      if (socket.current) {
+        socket.current?.emit('leave-room', eventRoom);
+        socket.current?.off('seat-book');
+      }
+    };
+    router.events.on('beforeHistoryChange', handleRouteChange);
+    return () => {
+      router.events.off('beforeHistoryChange', handleRouteChange);
+    };
+  }, [router]);
+
+  useEffect(() => {
+    const handleBeforeUnload = (event) => {
+      socket.current?.disconnect();
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
+
+  useEffect(() => {
     const sendBookSeat = () => {
       socket.current?.emit('seat-book', {
         room: eventRoom,
@@ -48,7 +74,7 @@ const Event = ({ id }) => {
       });
     };
     sendBookSeat();
-  }, [id, tempSeat, isTempSeat, selectedSeats]);
+  }, [tempSeat, isTempSeat]);
   useEffect(() => {
     if (!socket.current) {
       socket.current = io(apiEndpoint, { transports: ['websocket'] });
@@ -58,16 +84,11 @@ const Event = ({ id }) => {
       socket.current.on('seat-book', (params) => {
         const deserializedParams = params.map((param) => ({
           ...param,
-          seatId: param.seatId.toString(),
+          seatId: param.seatId?.toString(),
+          state: !!param.state,
         }));
         setSetToRoom(deserializedParams);
       });
-      return () => {
-        if (socket.current) {
-          socket.current.emit('leave-room', eventRoom);
-          socket.current.off('seat-book');
-        }
-      };
     }
   }, [id, event, setToRoom]);
 
@@ -97,7 +118,9 @@ const Event = ({ id }) => {
                             (s) => s._id === seat._id
                           )
                             ? 'rgb(120, 205, 4)'
-                            : setToRoom.some((s) => s.seatId === seat._id)
+                            : setToRoom.some(
+                                (s) => s.seatId === seat._id && s.state
+                              )
                             ? 'red'
                             : 'rgb(96, 93, 169)',
                         }}
@@ -138,6 +161,7 @@ const Event = ({ id }) => {
           <BookingCheckout
             selectedSeats={selectedSeats}
             ticketPrice={event?.ticketPrice}
+            user={user}
           />
         </div>
       )}
@@ -145,10 +169,27 @@ const Event = ({ id }) => {
   );
 };
 
-export const getServerSideProps = async ({ params: { id } }) => {
+export const getServerSideProps = async ({ req, params }) => {
+  const { id } = params;
+  let jwtString = null;
+  const keyValuePairs = req.headers?.cookie?.split('; ');
+  if (keyValuePairs) {
+    for (const pair of keyValuePairs) {
+      if (pair.startsWith('jwt=')) {
+        jwtString = pair.substring(4);
+        break;
+      }
+    }
+  }
+  const res = await axios.get(`${apiEndpoint}/api/users/me`, {
+    withCredentials: true,
+    headers: { Authorization: `Bearer ${jwtString}` },
+  });
+  const user = res.data.doc;
   return {
     props: {
       id,
+      user,
     },
   };
 };

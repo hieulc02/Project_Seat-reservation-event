@@ -30,7 +30,7 @@ const reservationSchema = new Schema(
       ref: 'User',
       required: true,
     },
-    event: {
+    eventId: {
       type: Schema.Types.ObjectId,
       ref: 'Event',
       required: true,
@@ -49,7 +49,7 @@ const reservationSchema = new Schema(
 reservationSchema.pre(/^find/, function (next) {
   this.populate('user')
     .populate({
-      path: 'event',
+      path: 'eventId',
       select: 'name',
     })
     .populate('seats');

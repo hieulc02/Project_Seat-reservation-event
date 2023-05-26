@@ -6,7 +6,7 @@ import Loading from '../../components/loading';
 import io from 'socket.io-client';
 import styles from '../../styles/seat.module.scss';
 import axios from 'axios';
-import BookingCheckout from '../../components/booking/bookingCheckout';
+import BookingCheckout from '../../components/bookingCheckout';
 import apiEndpoint from '../../apiConfig';
 
 const Event = ({ id, user }) => {
@@ -91,6 +91,25 @@ const Event = ({ id, user }) => {
       });
     }
   }, [id, event, setToRoom]);
+  // useEffect(() => {
+  //   const checkSum = async () => {
+  //     try {
+  //       const res = await vnPayReturn();
+  //       if (res.code === '00') {
+  //         Swal.fire('Congratulation!', 'Payment successfully!', 'success').then(
+  //           () => router.push(`/event/${id}`)
+  //         );
+  //       } else {
+  //         Swal.fire('Oops!', 'Payment failed!', 'error').then(() =>
+  //           router.push(`/event/${id}`)
+  //         );
+  //       }
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   };
+  //   checkSum();
+  // }, []);
 
   return (
     <Layout>

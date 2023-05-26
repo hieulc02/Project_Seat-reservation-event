@@ -22,6 +22,7 @@ const Home = ({ user }) => {
         <h1 className={styles.title}>Welcome back {user?.name}</h1>
         <div>
           <ButtonLogout />
+          {/* <VnPayBooking total={3} /> */}
         </div>
       </main>
     </div>

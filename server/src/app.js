@@ -16,6 +16,7 @@ const io = require('socket.io')(server, {
 const userRoute = require('./route/userRoute');
 const eventRoute = require('./route/eventRoute');
 const resRoute = require('./route/reservationRoute');
+const bookRoute = require('./route/bookingRoute');
 
 dotenv.config({ path: '../config.env' });
 
@@ -36,7 +37,7 @@ app.use(bodyParser.json());
 app.use(express.json());
 
 app.use((req, res, next) => {
-  //console.log(req.headers);
+  // console.log(req.body);
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.setHeader(
     'Access-Control-Allow-Methods',
@@ -93,5 +94,5 @@ io.on('connection', (socket) => {
 app.use('/api/users', userRoute);
 app.use('/api/events', eventRoute);
 app.use('/api/reservation', resRoute);
-
+app.use('/api/booking', bookRoute);
 module.exports = server;

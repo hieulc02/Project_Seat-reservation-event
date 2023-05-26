@@ -1,3 +1,11 @@
+import Navbar from './navbar';
+import { useEffect, useState } from 'react';
+
 export default function Layout({ children }) {
-  return <div>{children}</div>;
+  return (
+    <>
+      <Navbar />
+      <main>{children}</main>
+    </>
+  );
 }

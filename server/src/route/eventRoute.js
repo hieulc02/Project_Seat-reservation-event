@@ -4,12 +4,14 @@ const eventController = require('../controller/eventController');
 const authController = require('../controller/authController');
 const eventRoute = express.Router();
 
-eventRoute.route('/').get(eventController.getAllEvents).post(
-  authController.protect,
-  authController.restrictTo('admin'),
-  // eventController.createEvent
-  eventController.createEventWithSeat
-);
+eventRoute
+  .route('/')
+  .get(eventController.getAllEvents)
+  .post(
+    authController.protect,
+    authController.restrictTo('admin'),
+    eventController.createEventWithSeat
+  );
 eventRoute.route('/seat').delete(eventController.deleteAllSeat);
 eventRoute
   .route('/:id')

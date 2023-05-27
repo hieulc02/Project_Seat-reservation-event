@@ -18,7 +18,8 @@ exports.createPaymentUrl = catchAsync(async (req, res, next) => {
 
   let orderId = moment(date).format('DDHHmmss');
 
-  let amount = req.body.total * 100;
+  let price = req.body.ticketPrice;
+  let amount = req.body.total;
   let bankCode = req.body?.bankCode || '';
   let locale = req.body?.language || 'vn';
   let selectedSeat = req.body.selectedSeats;
@@ -34,7 +35,7 @@ exports.createPaymentUrl = catchAsync(async (req, res, next) => {
   vnp_Params['vnp_TxnRef'] = orderId;
   vnp_Params['vnp_OrderInfo'] = orderInfo;
   vnp_Params['vnp_OrderType'] = 'other';
-  vnp_Params['vnp_Amount'] = amount * 10000;
+  vnp_Params['vnp_Amount'] = amount * price * 100;
   vnp_Params['vnp_ReturnUrl'] = returnUrl;
   vnp_Params['vnp_IpAddr'] = ipAddr;
   vnp_Params['vnp_CreateDate'] = createDate;

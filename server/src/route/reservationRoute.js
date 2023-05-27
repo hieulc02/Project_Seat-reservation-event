@@ -5,6 +5,10 @@ const authController = require('../controller/authController');
 
 router.use(authController.protect);
 router.get('/', resController.getAllReservation);
-router.patch('/:id', resController.updateReservation);
+router.post('/me', resController.getAllReservationByUser);
+router
+  .route('/:id')
+  .get(resController.getReservation)
+  .patch(resController.updateReservation);
 
 module.exports = router;

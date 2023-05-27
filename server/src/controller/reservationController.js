@@ -7,11 +7,25 @@ const AppError = require('../utils/appError');
 
 exports.createReservation = factory.createOne(Reservation);
 exports.getAllReservation = factory.getAll(Reservation);
+exports.getAllReservationByUser = catchAsync(async (req, res, next) => {
+  const { id } = req.body;
+  const userReservation = await Reservation.find({ user: id });
+  res.status(200).json({
+    status: 'success',
+    userReservation,
+  });
+});
+exports.getReservation = factory.getOne(Reservation);
 exports.updateReservation = factory.updateOne(Reservation);
-
 exports.createReservationWithSeat = catchAsync(async (req, res, next) => {
-  const reservation = Reservation(req.body);
   const { selectedSeats, total, eventId } = req.body;
+  const seatIds = selectedSeats.map((s) => s._id);
+  const reservation = new Reservation({
+    seats: seatIds,
+    total: req.body.total,
+    user: req.body.user,
+    eventId: req.body.eventId,
+  });
 
   if (!eventId) {
     return next(
@@ -28,12 +42,6 @@ exports.createReservationWithSeat = catchAsync(async (req, res, next) => {
   await Seat.reservedSeats(selectedSeats, eventId);
   await Event.seatUpdated(total, eventId);
   await reservation.save();
+
   next();
-  // res.status(200).json({
-  //   status: 'Reservation created successfully',
-  //   data: {
-  //     reservation,
-  //     updatedSeats,
-  //   },
-  // });
 });

@@ -9,17 +9,24 @@ export const Axios = axios.create({
     Authorization: `Bearer ${Cookies.get('token' || 'jwt')}`,
   },
 });
-export const vnPayBooking = async (selectedSeats, total, user, eventId) => {
+export const vnPayBooking = async (
+  selectedSeats,
+  total,
+  user,
+  eventId,
+  ticketPrice
+) => {
   const res = await Axios.post('/create_payment_url', {
     selectedSeats,
     total,
     user,
     eventId,
+    ticketPrice,
   });
   return res.data;
 };
 
 export const vnPayReturn = async () => {
-  const res = await Axios.post(`/vnpay_return${window.location.search}`);
+  const res = await Axios.get(`/vnpay_return${window.location.search}`);
   return res.data;
 };

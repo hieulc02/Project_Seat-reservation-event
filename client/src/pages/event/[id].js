@@ -34,7 +34,7 @@ const Event = ({ id, user }) => {
     const fetchData = async () => {
       try {
         const res = await getEvent(id);
-        setEvent(res.doc);
+        setEvent(res);
       } catch (e) {
         console.log(e);
       }
@@ -80,8 +80,8 @@ const Event = ({ id, user }) => {
       socket.current = io(apiEndpoint, { transports: ['websocket'] });
     }
     if (socket.current) {
-      socket.current.emit('join-room', eventRoom);
-      socket.current.on('seat-book', (params) => {
+      socket.current?.emit('join-room', eventRoom);
+      socket.current?.on('seat-book', (params) => {
         const deserializedParams = params.map((param) => ({
           ...param,
           seatId: param.seatId?.toString(),
@@ -90,101 +90,84 @@ const Event = ({ id, user }) => {
         setSetToRoom(deserializedParams);
       });
     }
-  }, [id, event, setToRoom]);
-  // useEffect(() => {
-  //   const checkSum = async () => {
-  //     try {
-  //       const res = await vnPayReturn();
-  //       if (res.code === '00') {
-  //         Swal.fire('Congratulation!', 'Payment successfully!', 'success').then(
-  //           () => router.push(`/event/${id}`)
-  //         );
-  //       } else {
-  //         Swal.fire('Oops!', 'Payment failed!', 'error').then(() =>
-  //           router.push(`/event/${id}`)
-  //         );
-  //       }
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   };
-  //   checkSum();
-  // }, []);
+  }, [setToRoom]);
 
   return (
-    <Layout>
-      {!event && <Loading />}
-      {event && (
-        <div className={styles.container}>
-          <div className={styles.hall}>
-            {event?.seats.map((seatRow, indexRow) => (
-              <div key={indexRow} className={styles.row}>
-                {seatRow.map((seat, indexCol) => (
-                  <React.Fragment key={seat._id}>
-                    {seat.isOccupied ? (
-                      <div
-                        style={{ background: 'rgb(65, 66, 70)' }}
-                        className={styles.occupied}
-                        key={`${indexRow}-${indexCol}`}
-                      >
-                        {seat.row} - {seat.col}
-                      </div>
-                    ) : (
-                      <div
-                        className={styles.seat}
-                        style={{
-                          background: selectedSeats?.some(
-                            (s) => s._id === seat._id
-                          )
-                            ? 'rgb(120, 205, 4)'
-                            : setToRoom.some(
-                                (s) => s.seatId === seat._id && s.state
-                              )
-                            ? 'red'
-                            : 'rgb(96, 93, 169)',
-                        }}
-                        key={`${indexRow}-${indexCol}`}
-                        onClick={() => handleSeatClick(seat)}
-                      >
-                        {seat.row} - {seat.col}
-                      </div>
-                    )}
-                  </React.Fragment>
-                ))}
+    <>
+      <Layout>
+        {!event && <Loading />}
+        {event && (
+          <div className={styles.container}>
+            <div className={styles.hall}>
+              {event?.seats.map((seatRow, indexRow) => (
+                <div key={indexRow} className={styles.row}>
+                  {seatRow.map((seat, indexCol) => (
+                    <React.Fragment key={seat._id}>
+                      {seat.isOccupied ? (
+                        <div
+                          style={{ background: 'rgb(65, 66, 70)' }}
+                          className={styles.occupied}
+                          key={`${indexRow}-${indexCol}`}
+                        >
+                          {seat.row} - {seat.col}
+                        </div>
+                      ) : (
+                        <div
+                          className={styles.seat}
+                          style={{
+                            background: selectedSeats?.some(
+                              (s) => s._id === seat._id
+                            )
+                              ? 'rgb(120, 205, 4)'
+                              : setToRoom?.some(
+                                  (s) => s.seatId === seat._id && s.state
+                                )
+                              ? 'red'
+                              : 'rgb(96, 93, 169)',
+                          }}
+                          key={`${indexRow}-${indexCol}`}
+                          onClick={() => handleSeatClick(seat)}
+                        >
+                          {seat.row} - {seat.col}
+                        </div>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </div>
+              ))}
+            </div>
+            <div className={styles.seatInfoContainer}>
+              <div className={styles.seatInfo}>
+                <div
+                  className={styles.seatLabel}
+                  style={{ background: 'rgb(96, 93, 169)' }}
+                ></div>
+                Available
               </div>
-            ))}
+              <div className={styles.seatInfo}>
+                <div
+                  className={styles.seatLabel}
+                  style={{ background: 'rgb(65, 66, 70)' }}
+                ></div>
+                Reserved
+              </div>
+              <div className={styles.seatInfo}>
+                <div
+                  className={styles.seatLabel}
+                  style={{ background: 'rgb(120, 205, 4)' }}
+                ></div>
+                Selected
+              </div>
+            </div>
+            <BookingCheckout
+              selectedSeats={selectedSeats}
+              ticketPrice={event?.ticketPrice}
+              user={user}
+            />
           </div>
-          <div className={styles.seatInfoContainer}>
-            <div className={styles.seatInfo}>
-              <div
-                className={styles.seatLabel}
-                style={{ background: 'rgb(96, 93, 169)' }}
-              ></div>
-              Available
-            </div>
-            <div className={styles.seatInfo}>
-              <div
-                className={styles.seatLabel}
-                style={{ background: 'rgb(65, 66, 70)' }}
-              ></div>
-              Reserved
-            </div>
-            <div className={styles.seatInfo}>
-              <div
-                className={styles.seatLabel}
-                style={{ background: 'rgb(120, 205, 4)' }}
-              ></div>
-              Selected
-            </div>
-          </div>
-          <BookingCheckout
-            selectedSeats={selectedSeats}
-            ticketPrice={event?.ticketPrice}
-            user={user}
-          />
-        </div>
-      )}
-    </Layout>
+        )}
+      </Layout>
+    </>
   );
 };
 

@@ -13,6 +13,15 @@ export const Axios = axios.create({
 });
 export const createReservation = async (reservation) => {
   const res = await Axios.post('/', reservation);
-  //console.log(res);
+  return res.data;
+};
+
+export const getAllReservation = async () => {
+  const res = await Axios.get('/');
+  return res.data;
+};
+
+export const getReservationByUser = async (id) => {
+  const res = await Axios.post(`/me`, { id });
   return res.data;
 };

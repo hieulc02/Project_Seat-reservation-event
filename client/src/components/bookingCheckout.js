@@ -17,7 +17,13 @@ const BookingCheckout = ({ selectedSeats, ticketPrice, user }) => {
 
   const handleClick = async () => {
     try {
-      const res = await vnPayBooking(selectedSeats, total, user, eventId);
+      const res = await vnPayBooking(
+        selectedSeats,
+        total,
+        user,
+        eventId,
+        ticketPrice
+      );
       if (!res) {
         return;
       }
@@ -46,7 +52,7 @@ const BookingCheckout = ({ selectedSeats, ticketPrice, user }) => {
         <div className={styles.checkout}>
           {selectedSeats?.length > 0 && (
             <button onClick={handleClick} className={styles.button}>
-              Vnpay Checkout
+              Checkout by Vnpay
             </button>
           )}
         </div>

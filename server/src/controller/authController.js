@@ -12,7 +12,7 @@ const signToken = (id) => {
 
 const createSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
-
+  const isAdmin = user?.role;
   res.cookie('jwt', token, {
     expires: new Date(Date.now() + 9000000 * 24 * 60),
     httpOnly: true,
@@ -26,8 +26,8 @@ const createSendToken = (user, statusCode, req, res) => {
   res.status(statusCode).json({
     status: `${event} successfully`,
     token,
+    isAdmin,
   });
-  // res.send({ user, token });
 };
 
 exports.signup = catchAsync(async (req, res, next) => {

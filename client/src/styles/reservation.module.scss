@@ -1,0 +1,77 @@
+.noReservation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.3rem;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+  height: 35rem;
+}
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 1rem;
+  .boxContainer {
+    display: flex;
+    justify-content: center;
+    //align-items: center;
+    flex-direction: column;
+    border: 2px solid black;
+    margin: 1rem;
+    padding: 0.5rem;
+    width: 100%;
+    .box {
+      font-family: Arial, sans-serif;
+      .dateContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .date {
+          text-align: center;
+          flex-grow: 1;
+          font-weight: bold;
+          text-decoration: underline;
+        }
+      }
+      .eventContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .event {
+          text-align: center;
+          flex-grow: 1;
+        }
+      }
+      .descriptionContainer {
+        display: flex;
+        text-align: center;
+        flex-grow: 1;
+        .description {
+          text-align: center;
+          flex-grow: 1;
+        }
+      }
+      .seatContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .seat {
+          text-align: center;
+          flex-grow: 1;
+          font-weight: bold;
+        }
+      }
+      .amount {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .total {
+          text-align: center;
+          flex-grow: 1;
+        }
+      }
+    }
+  }
+}

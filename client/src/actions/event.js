@@ -23,10 +23,15 @@ export const getAllEvent = async () => {
 export const getEvent = async (id) => {
   const res = await Axios.get(`/${id}`);
   // console.log(res);
-  return res.data;
+  return res.data.doc;
 };
 
 export const deleteEvent = async (id) => {
   const res = await Axios.delete(`/${id}`);
+  return res.data;
+};
+
+export const updateEvent = async (id, updatedEvent) => {
+  const res = await Axios.patch(`/${id}`, updatedEvent);
   return res.data;
 };

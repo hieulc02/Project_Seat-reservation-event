@@ -10,7 +10,6 @@ exports.deleteOne = (Model) =>
 
     res.status(204).json({
       status: 'success',
-      data: null,
     });
   });
 exports.deleteAll = (Model) =>
@@ -18,7 +17,6 @@ exports.deleteAll = (Model) =>
     await Model.deleteMany({});
     res.status(204).json({
       status: 'success',
-      data: null,
     });
   });
 exports.createOne = (Model) =>
@@ -26,7 +24,7 @@ exports.createOne = (Model) =>
     const doc = await Model.create(req.body);
     res.status(201).json({
       status: 'success',
-      doc
+      doc,
     });
   });
 
@@ -42,10 +40,8 @@ exports.updateOne = (Model) =>
     }
 
     res.status(200).json({
-      status: 'success',
-      data: {
-        doc,
-      },
+      status: 'Event successfully updated',
+      doc,
     });
   });
 
@@ -57,7 +53,7 @@ exports.getOne = (Model) =>
     }
     res.status(200).json({
       status: 'success',
-      doc
+      doc,
     });
   });
 
@@ -66,6 +62,6 @@ exports.getAll = (Model) =>
     const doc = await Model.find({});
     res.status(200).json({
       status: 'success',
-      doc
+      doc,
     });
   });

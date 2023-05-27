@@ -13,7 +13,7 @@ userRoute.get('/me', userController.getMe, userController.getUser);
 userRoute.patch('/updateMe', userController.updateMe);
 
 userRoute.use(authController.restrictTo('admin'));
-//userRoute.get('/', userController.getAllUsers);
+userRoute.get('/', userController.getAllUsers);
 userRoute
   .route('/:id')
   .patch(userController.updateUser)

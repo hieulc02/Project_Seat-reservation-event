@@ -5,10 +5,8 @@ import { useState } from 'react';
 function MyApp({ Component, pageProps }) {
   return (
     <>
-      <Layout>
-        <Component {...pageProps} />
-        <ToastContainer hideProgressBar={true} autoClose={1000} />
-      </Layout>
+      <Component {...pageProps} />
+      <ToastContainer hideProgressBar={true} autoClose={1000} />
     </>
   );
 }

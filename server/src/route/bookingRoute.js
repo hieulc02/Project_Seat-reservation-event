@@ -10,6 +10,5 @@ bookRoute.post(
   resController.createReservationWithSeat,
   bookingController.createPaymentUrl
 );
-bookRoute.post('/vnpay_return', bookingController.vnpStatusReturn);
-
+bookRoute.get('/vnpay_return', bookingController.vnpStatusReturn);
 module.exports = bookRoute;

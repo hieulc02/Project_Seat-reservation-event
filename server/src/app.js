@@ -37,7 +37,7 @@ app.use(bodyParser.json());
 app.use(express.json());
 
 app.use((req, res, next) => {
-  // console.log(req.body);
+  console.log(req.body);
   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.setHeader(
     'Access-Control-Allow-Methods',
@@ -53,18 +53,20 @@ io.on('connection', (socket) => {
   socket.on('join-room', (room) => {
     socket.join(room);
     const serializedSet = [...setToRoom.values()];
-    socket.to(room).emit('seat-book', serializedSet);
+    socket?.to(room)?.emit('seat-book', serializedSet);
   });
 
   socket.on('leave-room', (room) => {
     socket.leave(room);
-    setToRoom.forEach((s) => {
-      if (s.room === room) {
-        setToRoom.delete(s);
-      }
-    });
-    const serializedSet = [...setToRoom.values()];
-    socket.broadcast.to(s.room).emit('seat-book', serializedSet);
+    if (setToRoom.size > 1) {
+      setToRoom.forEach((s) => {
+        if (s.room === room) {
+          setToRoom.delete(s);
+        }
+      });
+      const serializedSet = [...setToRoom.values()];
+      socket.broadcast?.to(s?.room).emit('seat-book', serializedSet);
+    }
   });
 
   socket.on('disconnect', () => {
@@ -72,7 +74,7 @@ io.on('connection', (socket) => {
       if (s.socketId === socket.id) {
         setToRoom.delete(s);
         const serializedSet = [...setToRoom.values()];
-        socket.broadcast.to(s.room).emit('seat-book', serializedSet);
+        socket.broadcast?.to(s.room).emit('seat-book', serializedSet);
       }
     });
   });
@@ -88,7 +90,7 @@ io.on('connection', (socket) => {
       });
     }
     const serializedSet = [...setToRoom.values()];
-    socket.broadcast.to(params.room).emit('seat-book', serializedSet);
+    socket.broadcast?.to(params.room).emit('seat-book', serializedSet);
   });
 });
 app.use('/api/users', userRoute);

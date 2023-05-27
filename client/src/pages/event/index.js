@@ -12,10 +12,7 @@ const ShowEvents = ({ events }) => {
     const fetchData = async () => {
       try {
         const docs = await getAllEvent();
-        let d = [];
-        docs.forEach((doc) => {
-          d.push({ ...doc });
-        });
+        const d = docs.map((doc) => doc);
         setData(d);
       } catch (e) {
         console.log(e);
@@ -28,18 +25,20 @@ const ShowEvents = ({ events }) => {
   const isFull = data?.every((event) => event.seatAvailable === 0);
   return (
     <>
-      {!data && <Loading />}
-      {data?.length === 0 && (
-        <div className={styles.noEvent}>
-          <h1> No event today </h1>
-        </div>
-      )}
-      {isFull && (
-        <div className={styles.isFull}>
-          <h1>Sorry, all shows is now full!</h1>
-        </div>
-      )}
       <Layout>
+        {!data && <Loading />}
+        {data?.length === 0 && (
+          <div className={styles.isEventAvailable}>
+            There are no shows or events scheduled for today. Please check back
+            for future updates.
+          </div>
+        )}
+        {data?.length > 0 && isFull && (
+          <div className={styles.isEventAvailable}>
+            We regret to inform you that all seats for the event are fully
+            booked, and there are no more available spots for reservations.😢
+          </div>
+        )}
         <div className={styles.container}>
           {data &&
             data?.map((event, i) => (

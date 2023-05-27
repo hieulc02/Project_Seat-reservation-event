@@ -19,7 +19,7 @@ const LoginForm = () => {
       const user = await login(email, userPassword);
       if (!user) return;
       toast.success(user.status);
-      Router.push('/');
+      Router.push(user.isAdmin === 'admin' ? '/admin' : '/');
     } catch (e) {
       console.log(e);
       setErrors(e.response?.data?.error);

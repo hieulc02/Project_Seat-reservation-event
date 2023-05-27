@@ -2,7 +2,6 @@ import axios from 'axios';
 import apiEndpoint from '../apiConfig';
 import Cookies from 'js-cookie';
 import Router from 'next/router';
-import { isAuth } from './handleUser';
 export const Axios = axios.create({
   baseURL: `${apiEndpoint}/api/users`,
   withCredentials: true,

@@ -3,6 +3,7 @@ const Event = require('../models/event');
 const Seat = require('../models/seat');
 const factory = require('./handleFactory');
 const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
 
 exports.getAllEvents = factory.getAll(Event);
 exports.getEvent = factory.getOne(Event);
@@ -23,6 +24,7 @@ exports.createEventWithSeat = catchAsync(async (req, res, next) => {
       error: 'Invalid input. Please check the input type!',
     });
   }
+
   const seats = [];
   for (let i = 0; i < rows; i++) {
     const row = [];

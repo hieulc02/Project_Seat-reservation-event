@@ -1,0 +1,40 @@
+.container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background: orange;
+  width: 100%;
+  .box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+    background: aqua;
+    flex-grow: 4;
+    a {
+      text-decoration: none;
+    }
+    .home {
+      margin-left: 10rem;
+      border: 1px solid black;
+    }
+    .event {
+      margin-left: 1rem;
+      border: 1px solid black;
+    }
+    .reservation {
+      margin-left: 1rem;
+      flex-grow: 2;
+      border: 1px solid black;
+    }
+    .login {
+      padding: 1rem 1.22rem;
+      margin-right: 0.3rem;
+      border: 1px solid black;
+    }
+    .signup {
+      padding: 1rem;
+      border: 1px solid black;
+    }
+  }
+}

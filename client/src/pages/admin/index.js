@@ -1,8 +1,12 @@
+import React, { useState, useEffect } from 'react';
+import Layout from '../../components/layout';
+import UpdateEvent from '../../components/event/update';
+
 const Admin = () => {
   return (
-    <>
-      <div>admin</div>
-    </>
+    <Layout>
+      <UpdateEvent />
+    </Layout>
   );
 };
 

@@ -1,9 +1,8 @@
 import Head from 'next/head';
 import React, { useEffect, useRef } from 'react';
-// import io from 'socket.io-client';
 import styles from '../styles/Home.module.css';
 import ButtonLogout from '../components/logout';
-import Navbar from '../components/navbar';
+import Layout from '../components/layout';
 import axios from 'axios';
 import apiEndpoint from '../apiConfig';
 import { cookies } from 'next/dist/client/components/headers';
@@ -11,21 +10,20 @@ import { cookies } from 'next/dist/client/components/headers';
 
 const Home = ({ user }) => {
   return (
-    <div className={styles.container}>
-      <Navbar />
-      <Head>
-        <title>BOOKING</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <Layout>
+      <div className={styles.container}>
+        <Head>
+          <title>Event Seat Reservation</title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
 
-      <main>
-        <h1 className={styles.title}>Welcome back {user?.name}</h1>
-        <div>
-          <ButtonLogout />
-          {/* <VnPayBooking total={3} /> */}
-        </div>
-      </main>
-    </div>
+        <main>
+          <div>
+            <h1 className={styles.title}>Welcome back {user?.name}</h1>
+          </div>
+        </main>
+      </div>
+    </Layout>
   );
 };
 

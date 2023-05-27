@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import Layout from '../../components/layout';
 //import AddEvent from '../../components/addEvent';
-const AddEvent = dynamic(() => import('../../components/addEvent'), {
+const AddEvent = dynamic(() => import('../../components/event/add'), {
   ssr: false,
 });
 function CreateEvent() {

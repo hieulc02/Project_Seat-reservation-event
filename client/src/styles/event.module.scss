@@ -9,9 +9,6 @@
 }
 
 .container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   .eventLink {
     text-decoration: none;
     .eventCard {
@@ -43,7 +40,7 @@
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
     width: max-content;
-    gap: 5rem;
+    gap: 3rem;
     .name {
       display: flex;
       justify-content: center;
@@ -96,11 +93,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 10rem;
+        width: 9rem;
         height: max-content;
-        margin-right: 1rem;
+        margin-left: 4rem;
         input {
-          height: 100%;
+          width: 100%;
           border: 1px solid black;
           box-sizing: border-box;
         }
@@ -109,11 +106,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 10rem;
+        width: 9rem;
         height: max-content;
-        margin-right: 1rem;
+        margin-left: 1rem;
         input {
-          height: 100%;
+          width: 100%;
           border: 1px solid black;
           box-sizing: border-box;
         }
@@ -122,28 +119,29 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 10rem;
+        width: 3rem;
         height: max-content;
-        margin-right: 2rem;
+        margin-left: 0.1rem;
         input {
-          height: 100%;
+          width: 100%;
           border: 2px solid black;
           box-sizing: border-box;
         }
       }
       .seat {
-        margin-right: 2rem;
+        margin-left: 4rem;
       }
       .row {
-        margin-right: 2rem;
+        margin-left: 4rem;
       }
       .col {
-        margin-right: 2rem;
+        margin-left: 4rem;
       }
       .update {
         width: 4rem;
         height: 2rem;
-        margin-right: 1rem;
+        margin-right: 0.5rem;
+        margin-left: 1.5rem;
       }
       .delete {
         width: 4rem;

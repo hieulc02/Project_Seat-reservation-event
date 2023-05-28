@@ -52,6 +52,15 @@ seatSchema.statics.checkExistSeats = async function (reservedSeats, eventId) {
     throw new Error('Check seat fail');
   }
 };
+seatSchema.statics.deleteSeatEvent = async function (id) {
+  try {
+    await this.deleteMany({
+      eventId: { $eq: id },
+    });
+  } catch (e) {
+    throw new Error('Fail to delete seat');
+  }
+};
 const Seat = mongoose.model('Seat', seatSchema);
 
 module.exports = Seat;

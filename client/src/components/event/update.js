@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { getAllEvent, updateEvent, deleteEvent } from '../../actions/event';
 import styles from '../../styles/event.module.scss';
+import SearchBar from '../searchBar';
 const UpdateEvent = () => {
   const [editMode, setEditMode] = useState(false);
   const [event, setEvent] = useState([]);
   const [updatedEvent, setUpdatedEvent] = useState(null);
   const [editEventId, setEditEventId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
   useEffect(() => {
     const fetchEvent = async () => {
       try {
@@ -48,9 +50,20 @@ const UpdateEvent = () => {
     setUpdatedEvent(event.find((e) => e._id === id));
     setEditMode(true);
   };
+  const handleSearch = (searchTerm) => {
+    setSearchTerm(searchTerm);
+  };
+
+  const filterEvent = event.filter((e) => {
+    const name = e.name.toLowerCase();
+    const description = e.description.toLowerCase();
+    const search = searchTerm.toLowerCase();
+    return name.includes(search) || description.includes(search);
+  });
   return (
     <>
       <div className={styles.updateContainer}>
+        <SearchBar onSearch={handleSearch} />
         <div className={styles.header}>
           <div className={styles.name}>Name</div>
           <div className={styles.des}>Description</div>
@@ -60,7 +73,7 @@ const UpdateEvent = () => {
           <div className={styles.col}>Col</div>
         </div>
         <div className={styles.tableContainer}>
-          {event?.map((e, i) => (
+          {filterEvent?.map((e, i) => (
             <React.Fragment key={i}>
               <div className={styles.tableEvent} key={e._id}>
                 <div className={styles.name}>

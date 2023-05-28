@@ -51,6 +51,15 @@ reservationSchema.pre(/^find/, function (next) {
 
   next();
 });
+reservationSchema.statics.deleteReservationEvent = async function (id) {
+  try {
+    await this.deleteMany({
+      eventId: { $eq: id },
+    });
+  } catch (e) {
+    throw new Error('Fail to delete reservation!');
+  }
+};
 
 const Reservation = mongoose.model('Reservation', reservationSchema);
 

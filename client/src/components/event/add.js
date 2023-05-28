@@ -27,7 +27,8 @@ const AddEvent = () => {
       toast.success(e.status);
       if (!e) return;
     } catch (e) {
-      toast.error(e.response.data.error);
+      console.log(e.response);
+      //toast.error(e.response.data.error);
     }
   };
 

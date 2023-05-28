@@ -12,7 +12,6 @@ eventRoute
     authController.restrictTo('admin'),
     eventController.createEventWithSeat
   );
-eventRoute.route('/seat').delete(eventController.deleteAllSeat);
 eventRoute
   .route('/:id')
   .get(eventController.getEvent)
@@ -24,6 +23,6 @@ eventRoute
   .delete(
     authController.protect,
     authController.restrictTo('admin'),
-    eventController.deleteEvent
+    eventController.deleteEventWithSeat
   );
 module.exports = eventRoute;

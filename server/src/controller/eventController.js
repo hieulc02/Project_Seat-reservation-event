@@ -1,16 +1,22 @@
-const express = require('express');
+const Reservation = require('../models/reservation');
 const Event = require('../models/event');
 const Seat = require('../models/seat');
 const factory = require('./handleFactory');
 const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/appError');
 
 exports.getAllEvents = factory.getAll(Event);
 exports.getEvent = factory.getOne(Event);
 exports.updateEvent = factory.updateOne(Event);
-exports.deleteEvent = factory.deleteOne(Event);
-exports.deleteAllSeat = factory.deleteAll(Seat);
 
+exports.deleteEventWithSeat = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  await Event.findByIdAndDelete(id);
+  await Seat.deleteSeatEvent(id);
+  await Reservation.deleteReservationEvent(id);
+  res.status(204).json({
+    status: 'success',
+  });
+});
 exports.createEventWithSeat = catchAsync(async (req, res, next) => {
   const event = new Event(req.body);
   const rows = event.row;

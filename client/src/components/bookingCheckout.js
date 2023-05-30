@@ -52,7 +52,7 @@ const BookingCheckout = ({ selectedSeats, ticketPrice, user }) => {
         <div className={styles.checkout}>
           {selectedSeats?.length > 0 && (
             <button onClick={handleClick} className={styles.button}>
-              Checkout by Vnpay
+              Place Order
             </button>
           )}
         </div>

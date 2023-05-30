@@ -98,6 +98,18 @@ const Event = ({ id, user }) => {
         {!event && <Loading />}
         {event && (
           <div className={styles.container}>
+            <div className={styles.image}>
+              <img
+                src={event.image}
+                alt="event-image"
+                style={{
+                  objectFit: 'cover',
+                  objectPosition: 'center',
+                  height: '30rem',
+                  width: '25%',
+                }}
+              />
+            </div>
             <div className={styles.hall}>
               {event?.seats.map((seatRow, indexRow) => (
                 <div key={indexRow} className={styles.row}>

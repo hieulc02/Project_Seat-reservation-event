@@ -9,8 +9,8 @@ export const Axios = axios.create({
     Authorization: `Bearer ${Cookies.get('token' || 'jwt')}`,
   },
 });
-export const createEvent = async (event) => {
-  const res = await Axios.post('/', event);
+export const createEvent = async (dataForm) => {
+  const res = await Axios.post('/', dataForm);
   return res.data;
 };
 

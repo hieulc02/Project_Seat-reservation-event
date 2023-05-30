@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { createEvent } from '../../actions/event';
+import React, { useState } from 'react';
+import { createEvent, imageToCloudinary } from '../../actions/event';
 import Router from 'next/router';
 import styles from '../../styles/event.module.scss';
 import { toast } from 'react-toastify';
 
 const AddEvent = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
   const [event, setEvent] = useState({
     name: '',
     description: '',
     row: '',
     col: '',
     ticketPrice: '',
+    image: null,
   });
-  //  const [errors, setErrors] = useState('');
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [previewSource, setPreviewSource] = useState('');
   const { name, description, row, col, ticketPrice } = event;
 
   const handleChange = (name) => {
@@ -21,21 +22,62 @@ const AddEvent = () => {
       setEvent({ ...event, [name]: e.target.value });
     };
   };
+
   const handleSubmit = async () => {
+    if (!selectedImage) return;
     try {
-      const e = await createEvent(event);
-      toast.success(e.status);
-      if (!e) return;
+      const formData = new FormData();
+      formData.append('file', selectedImage);
+      formData.append('data', JSON.stringify(event));
+      const res = await createEvent(formData);
+      toast.success(res.status);
+      setSelectedImage(null);
+      setPreviewSource('');
+      setEvent({
+        name: '',
+        description: '',
+        row: '',
+        col: '',
+        ticketPrice: '',
+        image: '',
+      });
     } catch (e) {
       console.log(e.response);
-      //toast.error(e.response.data.error);
+      //  toast.error(e.response);
     }
   };
-
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    setSelectedImage(file);
+    const encodedSource = await toBase64(file);
+    setPreviewSource(encodedSource);
+  };
+  const toBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
   return (
     <>
       <div className={styles.container}>
         <div className={styles.wrapper}>
+          <div>
+            <input type="file" onChange={handleImageChange} />
+            {previewSource && (
+              <img
+                src={previewSource}
+                alt="event-picture"
+                style={{ height: '20rem' }}
+              />
+            )}
+          </div>
           <div className={styles.main}>
             <label htmlFor="name" className={styles.label}>
               Event Name

@@ -17,10 +17,13 @@ exports.deleteEventWithSeat = catchAsync(async (req, res, next) => {
     status: 'success',
   });
 });
+
 exports.createEventWithSeat = catchAsync(async (req, res, next) => {
-  const event = new Event(req.body);
+  const data = JSON.parse(req.body.data);
+  const event = new Event({ ...data, image: req.body.image });
   const rows = event.row;
   const col = event.col;
+
   if (
     typeof rows !== 'number' ||
     typeof col !== 'number' ||
@@ -47,6 +50,7 @@ exports.createEventWithSeat = catchAsync(async (req, res, next) => {
   }
   event.seats = await Promise.all(seats);
   event.seatAvailable = seats.flat().length;
+
   await event.save();
   res.status(201).json({
     status: 'Event created successfully',

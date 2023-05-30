@@ -1,4 +1,3 @@
-const path = require('path');
 const morgan = require('morgan');
 const express = require('express');
 const app = express();
@@ -20,7 +19,12 @@ const bookRoute = require('./route/bookingRoute');
 
 dotenv.config({ path: '../config.env' });
 
-app.use(cors({ credentials: true, origin: true }));
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  })
+);
 
 if (process.env.NODE_ENV === 'development') {
   //app.use(morgan('dev'));
@@ -37,8 +41,7 @@ app.use(bodyParser.json());
 app.use(express.json());
 
 app.use((req, res, next) => {
-  // console.log(req.body);
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  //  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
     'Access-Control-Allow-Methods',
     'GET, POST, PUT, PATCH, DELETE'
@@ -53,7 +56,7 @@ io.on('connection', (socket) => {
   socket.on('join-room', (room) => {
     socket.join(room);
     const serializedSet = [...setToRoom.values()];
-    socket?.to(room)?.emit('seat-book', serializedSet);
+    socket.to(room).emit('seat-book', serializedSet);
   });
 
   socket.on('leave-room', (room) => {
@@ -63,9 +66,9 @@ io.on('connection', (socket) => {
         if (s.room === room) {
           setToRoom.delete(s);
         }
+        const serializedSet = [...setToRoom.values()];
+        socket.broadcast.to(s.room).emit('seat-book', serializedSet);
       });
-      const serializedSet = [...setToRoom.values()];
-      socket.broadcast?.to(s?.room).emit('seat-book', serializedSet);
     }
   });
 
@@ -74,7 +77,7 @@ io.on('connection', (socket) => {
       if (s.socketId === socket.id) {
         setToRoom.delete(s);
         const serializedSet = [...setToRoom.values()];
-        socket.broadcast?.to(s.room).emit('seat-book', serializedSet);
+        socket.broadcast.to(s.room).emit('seat-book', serializedSet);
       }
     });
   });
@@ -90,7 +93,7 @@ io.on('connection', (socket) => {
       });
     }
     const serializedSet = [...setToRoom.values()];
-    socket.broadcast?.to(params.room).emit('seat-book', serializedSet);
+    socket.broadcast.to(params.room).emit('seat-book', serializedSet);
   });
 });
 app.use('/api/users', userRoute);

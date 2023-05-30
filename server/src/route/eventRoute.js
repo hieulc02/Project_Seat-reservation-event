@@ -1,8 +1,11 @@
 const express = require('express');
-const Event = require('../models/event');
 const eventController = require('../controller/eventController');
 const authController = require('../controller/authController');
+const imageController = require('../controller/imageController');
 const eventRoute = express.Router();
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 eventRoute
   .route('/')
@@ -10,6 +13,8 @@ eventRoute
   .post(
     authController.protect,
     authController.restrictTo('admin'),
+    upload.single('file'),
+    imageController.imageToCloudinary,
     eventController.createEventWithSeat
   );
 eventRoute

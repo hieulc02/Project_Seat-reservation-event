@@ -76,6 +76,11 @@ const UpdateEvent = () => {
           {filterEvent?.map((e, i) => (
             <React.Fragment key={i}>
               <div className={styles.tableEvent} key={e._id}>
+                <img
+                  src={e.image}
+                  alt="event-picture"
+                  style={{ width: '5rem' }}
+                />
                 <div className={styles.name}>
                   {editMode && editEventId === e?._id ? (
                     <input

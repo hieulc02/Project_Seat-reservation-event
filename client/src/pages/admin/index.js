@@ -12,9 +12,7 @@ const Admin = () => {
   return (
     <Layout>
       <div onClick={() => handleTabClick('event')}>Event</div>
-      <div onClick={() => handleTabClick('user')}>User</div>
       {selectedTab === 'event' && <UpdateEvent />}
-      {selectedTab === 'user' && <div>Hello user</div>}
     </Layout>
   );
 };

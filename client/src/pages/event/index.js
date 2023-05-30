@@ -39,6 +39,7 @@ const ShowEvents = ({ events }) => {
             booked, and there are no more available spots for reservations.😢
           </div>
         )}
+        <div className={styles.headerCardItem}>Events</div>
         <div className={styles.container}>
           {data &&
             data?.map((event, i) => (
@@ -50,6 +51,15 @@ const ShowEvents = ({ events }) => {
                       className={styles.eventLink}
                     >
                       <div className={styles.eventCard}>
+                        <img
+                          src={event.image}
+                          alt="event picture"
+                          style={{
+                            objectFit: 'cover',
+                            objectPosition: 'center',
+                            height: '20rem',
+                          }}
+                        />
                         <p className={styles.eventName}>{event.name}</p>
                         <p className={styles.eventDescription}>
                           {event.description}

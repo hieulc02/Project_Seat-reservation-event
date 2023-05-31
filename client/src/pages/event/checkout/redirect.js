@@ -23,13 +23,9 @@ const VnPayReturn = () => {
         const res = await momoRedirect();
         console.log(res);
         if (res.resultCode === '0') {
-          setStatus(
-            'Your payment was successfully processed. Thank you for your purchase!✅'
-          );
+          setStatus(res.message);
         } else {
-          setStatus(
-            'We apologize, but there was an issue processing your payment. Please try again or contact our support team for assistance.❌'
-          );
+          setStatus(res.error);
         }
       } catch (e) {
         console.log(e);

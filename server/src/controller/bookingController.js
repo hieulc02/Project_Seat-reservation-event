@@ -76,6 +76,7 @@ exports.vnpStatusReturn = catchAsync(async (req, res, next) => {
   let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
   if (secureHash === signed) {
     res.status(200).json({
+      type: 'vnpay',
       code: vnp_Params['vnp_ResponseCode'],
     });
   } else {

@@ -98,11 +98,14 @@ const verifyPayment = async ({
     .createHmac('sha256', secretKey)
     .update(signatureRaw)
     .digest('hex');
-  if (resultCode.toString() !== '0') {
-    throw new Error('The transaction was not completed.');
-  }
   if (signatureValue !== signature) {
-    throw new Error('The transaction was not completed.');
+    return { resultCode: '99', error: 'The transaction was not completed.' };
+  }
+  if (resultCode.toString() !== '0') {
+    return {
+      resultCode: '99',
+      error: 'Process payment failed.',
+    };
   }
   return {
     type: 'momo',

@@ -14,4 +14,6 @@ bookRoute.post(
 bookRoute.get('/vnpay_return', bookingController.vnpStatusReturn);
 
 bookRoute.post('/momo_payment_url', momo.createPaymentUrl);
+
+bookRoute.get('/momo_return', momo.verifyPaymentUrl);
 module.exports = bookRoute;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { vnPayReturn } from '../../../actions/booking';
+import { vnPayReturn, momoRedirect } from '../../../actions/booking';
 import Loading from '../../../components/loading';
 import Layout from '../../../components/layout';
 import styles from '../../../styles/vnpay.module.scss';
@@ -9,8 +9,20 @@ const VnPayReturn = () => {
   useEffect(() => {
     const checkSum = async () => {
       try {
-        const res = await vnPayReturn();
-        if (res.code === '00') {
+        // const res = await vnPayReturn();
+        // if (res.code === '00') {
+        //   setStatus(
+        //     'Your payment was successfully processed. Thank you for your purchase!✅'
+        //   );
+        // } else {
+        //   setStatus(
+        //     'We apologize, but there was an issue processing your payment. Please try again or contact our support team for assistance.❌'
+        //   );
+        // }
+        //process momo verify
+        const res = await momoRedirect();
+        console.log(res);
+        if (res.resultCode === '0') {
           setStatus(
             'Your payment was successfully processed. Thank you for your purchase!✅'
           );

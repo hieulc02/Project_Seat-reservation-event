@@ -35,3 +35,8 @@ export const momoPayment = async (selectedSeats, total) => {
   const res = await Axios.post('/momo_payment_url', { selectedSeats, total });
   return res.data;
 };
+
+export const momoRedirect = async () => {
+  const res = await Axios.get(`/momo_return${window.location.search}`);
+  return res.data;
+};

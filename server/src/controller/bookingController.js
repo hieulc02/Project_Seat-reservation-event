@@ -9,7 +9,7 @@ exports.createPaymentUrl = catchAsync(async (req, res, next) => {
   let createDate = moment(date).format('YYYYMMDDHHmmss');
   let ipAddr = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
-  let config = require('../utils/configPayment');
+  let config = require('../utils/vnpay');
 
   let tmnCode = config.vnp_TmnCode;
   let secretKey = config.vnp_HashSecret;
@@ -64,7 +64,7 @@ exports.vnpStatusReturn = catchAsync(async (req, res, next) => {
 
   vnp_Params = sortObject(vnp_Params);
 
-  let config = require('../utils/configPayment');
+  let config = require('../utils/vnpay');
 
   let secretKey = config.vnp_HashSecret;
 

@@ -67,7 +67,7 @@ io.on('connection', (socket) => {
           setToRoom.delete(s);
         }
         const serializedSet = [...setToRoom.values()];
-        socket.broadcast.to(s.room).emit('seat-book', serializedSet);
+        socket.broadcast?.to(s.room)?.emit('seat-book', serializedSet);
       });
     }
   });
@@ -77,7 +77,7 @@ io.on('connection', (socket) => {
       if (s.socketId === socket.id) {
         setToRoom.delete(s);
         const serializedSet = [...setToRoom.values()];
-        socket.broadcast.to(s.room).emit('seat-book', serializedSet);
+        socket.broadcast?.to(s.room)?.emit('seat-book', serializedSet);
       }
     });
   });
@@ -93,9 +93,10 @@ io.on('connection', (socket) => {
       });
     }
     const serializedSet = [...setToRoom.values()];
-    socket.broadcast.to(params.room).emit('seat-book', serializedSet);
+    socket.broadcast?.to(params.room)?.emit('seat-book', serializedSet);
   });
 });
+
 app.use('/api/users', userRoute);
 app.use('/api/events', eventRoute);
 app.use('/api/reservation', resRoute);

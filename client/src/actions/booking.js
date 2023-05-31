@@ -30,3 +30,8 @@ export const vnPayReturn = async () => {
   const res = await Axios.get(`/vnpay_return${window.location.search}`);
   return res.data;
 };
+
+export const momoPayment = async (selectedSeats, total) => {
+  const res = await Axios.post('/momo_payment_url', { selectedSeats, total });
+  return res.data;
+};

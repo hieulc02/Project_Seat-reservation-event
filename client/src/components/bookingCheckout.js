@@ -1,6 +1,6 @@
 import styles from '../styles/checkout.module.scss';
 import React, { useEffect, useState } from 'react';
-import { vnPayBooking } from '../actions/booking';
+import { momoPayment, vnPayBooking } from '../actions/booking';
 import { useRouter } from 'next/router';
 
 const BookingCheckout = ({ selectedSeats, ticketPrice, user }) => {
@@ -17,17 +17,20 @@ const BookingCheckout = ({ selectedSeats, ticketPrice, user }) => {
 
   const handleClick = async () => {
     try {
-      const res = await vnPayBooking(
-        selectedSeats,
-        total,
-        user,
-        eventId,
-        ticketPrice
-      );
+      //vnpay
+      // const res = await vnPayBooking(
+      //   selectedSeats,
+      //   total,
+      //   user,
+      //   eventId,
+      //   ticketPrice
+      // );
+      //momo test
+      const res = await momoPayment(selectedSeats, total);
       if (!res) {
         return;
       }
-      router.replace(res.paymentUrl);
+      router.replace(res?.payUrl);
     } catch (e) {
       console.log(e);
     }

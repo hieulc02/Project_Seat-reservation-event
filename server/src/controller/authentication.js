@@ -54,11 +54,7 @@ exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    //return next(new AppError('Please provide email or password'), 400);
-    return res.status(400).json({
-      status: 'fail',
-      error: 'Please provide email or password',
-    });
+    return next(new AppError('Please provide email or password'), 400);
   }
 
   const user = await User.findOne({ email }).select('+password');
@@ -70,11 +66,7 @@ exports.login = catchAsync(async (req, res, next) => {
   //   });
   // });
   if (!user || !(await user.correctPassword(password, user.password))) {
-    //return next(new AppError('Incorrect email or password', 401));
-    return res.status(401).json({
-      status: 'fail',
-      error: 'Incorrect email or password',
-    });
+    return next(new AppError('Incorrect email or password', 401));
   }
 
   createSendToken(user, 200, req, res);
@@ -96,20 +88,14 @@ exports.protect = catchAsync(async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
-    //    console.log(req.headers.authorization);
-    //  console.log(token);
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
-    //console.log(req.cookies);
   }
-  //console.log(token);
+
   if (!token || token === 'null') {
-    // return next(
-    //   new AppError('You are not logged in! Please log in to get access', 401)
-    // );
-    return res.status(401).json({
-      error: 'You are not logged in! Please log in to get access',
-    });
+    return next(
+      new AppError('You are not logged in! Please log in to get access', 401)
+    );
   }
 
   const decode = await promisify(jwt?.verify)(token, process.env.JWT_SECRET);
@@ -122,22 +108,16 @@ exports.protect = catchAsync(async (req, res, next) => {
     );
   }
 
-  //grant access
   req.user = currentUser;
-  //req.locals.user = currentUser;
-  //console.log(req.locals);
   next();
 });
 
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
-      // return next(
-      //   new AppError('You do not have permission to this action', 403)
-      // );
-      return res.status(403).json({
-        error: 'You do not have permission to this action',
-      });
+      return next(
+        new AppError('You do not have permission to this action', 403)
+      );
     }
     next();
   };

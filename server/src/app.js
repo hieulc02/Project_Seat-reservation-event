@@ -12,10 +12,10 @@ const io = require('socket.io')(server, {
   },
 });
 
-const userRoute = require('./route/userRoute');
-const eventRoute = require('./route/eventRoute');
-const resRoute = require('./route/reservationRoute');
-const bookRoute = require('./route/bookingRoute');
+const userRoute = require('./route/user');
+const eventRoute = require('./route/event');
+const resRoute = require('./route/reservation');
+const bookRoute = require('./route/payment');
 
 dotenv.config({ path: '../config.env' });
 
@@ -48,6 +48,12 @@ app.use((req, res, next) => {
   );
   //res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
+});
+app.use((err, req, res, next) => {
+  res.status(err.statusCode || 500).json({
+    status: err.status || 'error',
+    error: err.message,
+  });
 });
 
 const setToRoom = new Set();

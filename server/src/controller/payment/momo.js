@@ -1,9 +1,9 @@
 const axios = require('axios');
 const crypto = require('crypto');
-const catchAsync = require('../utils/catchAsync');
+const catchAsync = require('../../utils/catchAsync');
 
 const createPayment = async (data) => {
-  let config = require('../utils/momo');
+  let config = require('../../utils/momo');
   let accessKey = config.accessKey;
   let secretKey = config.secretKey;
   let partnerCode = config.partnerCode;
@@ -90,7 +90,7 @@ const verifyPayment = async ({
   extraData,
   signature,
 }) => {
-  let config = require('../utils/momo');
+  let config = require('../../utils/momo');
   let accessKey = config.accessKey;
   let secretKey = config.secretKey;
   const signatureRaw = `accessKey=${accessKey}&amount=${amount}&extraData=${extraData}&message=${message}&orderId=${orderId}&orderInfo=${orderInfo}&orderType=${orderType}&partnerCode=${partnerCode}&payType=${payType}&requestId=${requestId}&responseTime=${responseTime}&resultCode=${resultCode}&transId=${transId}`;

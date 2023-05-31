@@ -9,14 +9,14 @@ export const Axios = axios.create({
     Authorization: `Bearer ${Cookies.get('token' || 'jwt')}`,
   },
 });
-export const vnPayBooking = async (
+export const vnPayPayment = async (
   selectedSeats,
   total,
   user,
   eventId,
   ticketPrice
 ) => {
-  const res = await Axios.post('/create_payment_url', {
+  const res = await Axios.post('/vnpay_payment_url', {
     selectedSeats,
     total,
     user,
@@ -31,12 +31,24 @@ export const vnPayReturn = async () => {
   return res.data;
 };
 
-export const momoPayment = async (selectedSeats, total) => {
-  const res = await Axios.post('/momo_payment_url', { selectedSeats, total });
+export const momoPayment = async (
+  selectedSeats,
+  total,
+  user,
+  eventId,
+  ticketPrice
+) => {
+  const res = await Axios.post('/momo_payment_url', {
+    selectedSeats,
+    total,
+    user,
+    eventId,
+    ticketPrice,
+  });
   return res.data;
 };
 
-export const momoRedirect = async () => {
+export const momoReturn = async () => {
   const res = await Axios.get(`/momo_return${window.location.search}`);
   return res.data;
 };

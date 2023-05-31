@@ -1,15 +1,12 @@
-const catchAsync = require('../utils/catchAsync');
+const catchAsync = require('../../utils/catchAsync');
 const moment = require('moment');
-const Reservation = require('../models/reservation');
-const Seat = require('../models/seat');
-const Event = require('../models/event');
 
-exports.createPaymentUrl = catchAsync(async (req, res, next) => {
+exports.createPaymentUrl = (req, res, next) => {
   let date = new Date();
   let createDate = moment(date).format('YYYYMMDDHHmmss');
   let ipAddr = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
-  let config = require('../utils/vnpay');
+  let config = require('../../utils/vnpay');
 
   let tmnCode = config.vnp_TmnCode;
   let secretKey = config.vnp_HashSecret;
@@ -54,8 +51,8 @@ exports.createPaymentUrl = catchAsync(async (req, res, next) => {
   vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
 
   res.status(200).json({ paymentUrl: vnpUrl });
-});
-exports.vnpStatusReturn = catchAsync(async (req, res, next) => {
+};
+exports.vnpStatusReturn = (req, res, next) => {
   let vnp_Params = req.query;
   let secureHash = vnp_Params['vnp_SecureHash'];
 
@@ -64,7 +61,7 @@ exports.vnpStatusReturn = catchAsync(async (req, res, next) => {
 
   vnp_Params = sortObject(vnp_Params);
 
-  let config = require('../utils/vnpay');
+  let config = require('../../utils/vnpay');
 
   let secretKey = config.vnp_HashSecret;
 
@@ -82,7 +79,7 @@ exports.vnpStatusReturn = catchAsync(async (req, res, next) => {
   } else {
     res.status(200).json({ code: '97' });
   }
-});
+};
 
 const sortObject = (obj) => {
   let sorted = {};

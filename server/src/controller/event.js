@@ -1,7 +1,7 @@
 const Reservation = require('../models/reservation');
 const Event = require('../models/event');
 const Seat = require('../models/seat');
-const factory = require('./handleFactory');
+const factory = require('./factory');
 const catchAsync = require('../utils/catchAsync');
 
 exports.getAllEvents = factory.getAll(Event);
@@ -44,7 +44,6 @@ exports.createEventWithSeat = catchAsync(async (req, res, next) => {
         eventId: event._id,
       });
       row.push(seat);
-      //seats.push(seat);
     }
     seats.push(row);
   }

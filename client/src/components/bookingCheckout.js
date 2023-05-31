@@ -1,12 +1,13 @@
 import styles from '../styles/checkout.module.scss';
 import React, { useEffect, useState } from 'react';
-import { momoPayment, vnPayBooking } from '../actions/booking';
+import { momoPayment, vnPayPayment } from '../actions/payment';
 import { useRouter } from 'next/router';
 
 const BookingCheckout = ({ selectedSeats, ticketPrice, user }) => {
   const router = useRouter();
   const [total, setTotal] = useState(0);
   const [eventId, setEventId] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(null);
 
   useEffect(() => {
     setTotal(selectedSeats.length);
@@ -17,23 +18,35 @@ const BookingCheckout = ({ selectedSeats, ticketPrice, user }) => {
 
   const handleClick = async () => {
     try {
-      //vnpay
-      // const res = await vnPayBooking(
-      //   selectedSeats,
-      //   total,
-      //   user,
-      //   eventId,
-      //   ticketPrice
-      // );
-      //momo test
-      const res = await momoPayment(selectedSeats, total);
+      let res;
+      if (selectedOption === 'vnPay') {
+        res = await vnPayPayment(
+          selectedSeats,
+          total,
+          user,
+          eventId,
+          ticketPrice
+        );
+        // router.replace(res?.paymentUrl);
+      } else {
+        res = await momoPayment(
+          selectedSeats,
+          total,
+          user,
+          eventId,
+          ticketPrice
+        );
+        //router.replace(res?.payUrl);
+      }
       if (!res) {
         return;
       }
-      router.replace(res?.payUrl);
     } catch (e) {
       console.log(e);
     }
+  };
+  const handleOptionChange = (option) => {
+    setSelectedOption(option);
   };
   return (
     <>
@@ -52,8 +65,34 @@ const BookingCheckout = ({ selectedSeats, ticketPrice, user }) => {
             ))}
           </>
         </div>
+        <div className={styles.option}>
+          <div className={styles.box}>
+            <input
+              type="checkbox"
+              id="checkbox"
+              className={styles.checkbox}
+              checked={selectedOption === 'vnPay'}
+              onChange={() => {
+                handleOptionChange('vnPay');
+              }}
+            />
+            <label htmlFor="checkbox">Pay with VnPay</label>
+          </div>
+          <div className={styles.box}>
+            <input
+              type="checkbox"
+              id="checkbox"
+              className={styles.checkbox}
+              checked={selectedOption === 'MoMo'}
+              onChange={() => {
+                handleOptionChange('MoMo');
+              }}
+            />
+            <label htmlFor="checkbox">Pay with MoMo</label>
+          </div>
+        </div>
         <div className={styles.checkout}>
-          {selectedSeats?.length > 0 && (
+          {selectedSeats?.length > 0 && selectedOption && (
             <button onClick={handleClick} className={styles.button}>
               Place Order
             </button>

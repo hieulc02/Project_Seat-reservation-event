@@ -1,27 +1,31 @@
 import { useState, useEffect } from 'react';
-import { vnPayReturn, momoRedirect } from '../../../actions/booking';
+import { vnPayReturn, momoReturn } from '../../../actions/payment';
 import Loading from '../../../components/loading';
 import Layout from '../../../components/layout';
 import styles from '../../../styles/vnpay.module.scss';
 const VnPayReturn = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState('');
   useEffect(() => {
     const checkSum = async () => {
       try {
-        // const res = await vnPayReturn();
-        // if (res.code === '00') {
-        //   setStatus(
-        //     'Your payment was successfully processed. Thank you for your purchase!✅'
-        //   );
-        // } else {
-        //   setStatus(
-        //     'We apologize, but there was an issue processing your payment. Please try again or contact our support team for assistance.❌'
-        //   );
-        // }
-        //process momo verify
-        const res = await momoRedirect();
-        console.log(res);
+        let res;
+
+        res = await vnPayReturn();
+        if (res) {
+          if (res.code === '00') {
+            setStatus(
+              'Your payment was successfully processed. Thank you for your purchase!✅'
+            );
+            return;
+          }
+          setStatus(
+            'We apologize, but there was an issue processing your payment. Please try again or contact our support team for assistance.❌'
+          );
+          return;
+        }
+
+        res = await momoReturn();
         if (res.resultCode === '0') {
           setStatus(res.message);
         } else {

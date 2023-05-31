@@ -1,7 +1,7 @@
 const express = require('express');
 const User = require('../models/user');
 const catchAsync = require('../utils/catchAsync');
-const factory = require('./handleFactory');
+const factory = require('./factory');
 
 exports.getMe = catchAsync(async (req, res, next) => {
   req.params.id = req.user.id;

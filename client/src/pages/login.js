@@ -1,12 +1,11 @@
-import Layout from '../components/layout';
-import LoginForm from '../components/login';
+import Login from '../components/login';
 
-const Login = () => {
+const LoginPage = () => {
   return (
     <>
-      <LoginForm />
+      <Login />
     </>
   );
 };
 
-export default Login;
+export default LoginPage;

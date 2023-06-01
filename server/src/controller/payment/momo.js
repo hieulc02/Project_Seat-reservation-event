@@ -70,7 +70,7 @@ const createPayment = async (data) => {
   }
 };
 
-const createPaymentUrl = catchAsync(async (req, res, next) => {
+exports.createPaymentUrl = catchAsync(async (req, res, next) => {
   const paymentData = await createPayment(req.body);
   res.json(paymentData);
 });
@@ -123,13 +123,7 @@ const verifyPayment = async ({
   };
 };
 
-const verifyPaymentUrl = catchAsync(async (req, res, next) => {
+exports.verifyPaymentUrl = catchAsync(async (req, res, next) => {
   const dataCheck = await verifyPayment(req.query);
   res.json(dataCheck);
 });
-module.exports = {
-  createPayment,
-  createPaymentUrl,
-  verifyPayment,
-  verifyPaymentUrl,
-};

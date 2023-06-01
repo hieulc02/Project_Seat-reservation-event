@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { momoPayment, vnPayPayment } from '../actions/payment';
 import { useRouter } from 'next/router';
 
-const BookingCheckout = ({ selectedSeats, ticketPrice, user }) => {
+const BookingCheckout = ({ selectedSeats, ticketPrice, user, event }) => {
   const router = useRouter();
   const [total, setTotal] = useState(0);
   const [eventId, setEventId] = useState(null);
@@ -27,7 +27,7 @@ const BookingCheckout = ({ selectedSeats, ticketPrice, user }) => {
           eventId,
           ticketPrice
         );
-        // router.replace(res?.paymentUrl);
+        router.replace(res?.paymentUrl);
       } else {
         res = await momoPayment(
           selectedSeats,
@@ -36,7 +36,7 @@ const BookingCheckout = ({ selectedSeats, ticketPrice, user }) => {
           eventId,
           ticketPrice
         );
-        //router.replace(res?.payUrl);
+        router.replace(res?.payUrl);
       }
       if (!res) {
         return;
@@ -51,19 +51,27 @@ const BookingCheckout = ({ selectedSeats, ticketPrice, user }) => {
   return (
     <>
       <div className={styles.container}>
-        <div className={styles.ticket}>{selectedSeats?.length} Tickets</div>
+        <div className={styles.name}>{event.name}</div>
+
+        <div className={styles.ticket}>
+          <div>Total: </div>
+          <div className={styles.value}>{selectedSeats?.length}</div>
+        </div>
         <div className={styles.price}>
-          {selectedSeats?.length * ticketPrice} &#x20AB;
+          <div>Damages: </div>
+          <div className={styles.value}>
+            {selectedSeats?.length * ticketPrice} &#x20AB;
+          </div>
         </div>
         <div className={styles.seatContainer}>
-          <>
-            Seat:
+          <div>Seat: </div>
+          <div className={styles.value}>
             {selectedSeats?.map((s, i) => (
               <div className={styles.seat} key={i}>
                 {s.row}-{s.col}
               </div>
             ))}
-          </>
+          </div>
         </div>
         <div className={styles.option}>
           <div className={styles.box}>

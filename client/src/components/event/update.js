@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { getAllEvent, updateEvent, deleteEvent } from '../../actions/event';
 import styles from '../../styles/event.module.scss';
-import SearchBar from '../searchBar';
+import SearchBar from '../search';
 const UpdateEvent = () => {
   const [editMode, setEditMode] = useState(false);
   const [event, setEvent] = useState([]);

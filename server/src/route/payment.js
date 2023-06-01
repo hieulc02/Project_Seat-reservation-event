@@ -11,7 +11,7 @@ bookRoute.post(
   resController.createReservationWithSeat,
   vnpay.createPaymentUrl
 );
-bookRoute.get('/vnpay_return', vnpay.vnpStatusReturn);
+bookRoute.get('/vnpay_return', vnpay.verifyPaymentUrl);
 
 bookRoute.post(
   '/momo_payment_url',

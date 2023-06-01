@@ -58,6 +58,7 @@ const ShowEvents = ({ events }) => {
                             objectFit: 'cover',
                             objectPosition: 'center',
                             height: '20rem',
+                            width: '100%',
                           }}
                         />
                         <p className={styles.eventName}>{event.name}</p>

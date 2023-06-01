@@ -1,10 +1,11 @@
-import Layout from '../components/layout';
 import Register from '../components/register';
 
-export default function Signup() {
+const SignupPage = () => {
   return (
     <>
       <Register />
     </>
   );
-}
+};
+
+export default SignupPage;

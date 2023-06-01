@@ -49,12 +49,6 @@ app.use((req, res, next) => {
   //res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
-app.use((err, req, res, next) => {
-  res.status(err.statusCode || 500).json({
-    status: err.status || 'error',
-    error: err.message,
-  });
-});
 
 const setToRoom = new Set();
 io.on('connection', (socket) => {
@@ -107,4 +101,11 @@ app.use('/api/users', userRoute);
 app.use('/api/events', eventRoute);
 app.use('/api/reservation', resRoute);
 app.use('/api/booking', bookRoute);
+
+app.use((err, req, res, next) => {
+  res.status(err.statusCode || 500).json({
+    status: err.status || 'error',
+    error: err.message,
+  });
+});
 module.exports = server;

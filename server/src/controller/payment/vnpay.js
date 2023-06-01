@@ -1,4 +1,3 @@
-const catchAsync = require('../../utils/catchAsync');
 const moment = require('moment');
 
 exports.createPaymentUrl = (req, res, next) => {
@@ -52,7 +51,7 @@ exports.createPaymentUrl = (req, res, next) => {
 
   res.status(200).json({ paymentUrl: vnpUrl });
 };
-exports.vnpStatusReturn = (req, res, next) => {
+exports.verifyPaymentUrl = (req, res, next) => {
   let vnp_Params = req.query;
   let secureHash = vnp_Params['vnp_SecureHash'];
 

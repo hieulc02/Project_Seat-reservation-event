@@ -1,28 +1,62 @@
 .container {
-  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
+  flex-direction: column;
+  height: 35rem;
+  width: 20rem;
+  margin-right: 2rem;
+  border: 2px solid black;
+  margin-top: 3rem;
+  gap: 2rem;
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.5rem;
+  .name {
+    width: 100%;
+    text-align: center;
+  }
   .ticket {
-    margin: 1rem;
-    font-size: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    justify-content: center;
+    gap: 0.2rem;
+    .value {
+      text-align: center;
+    }
   }
   .price {
-    margin: 1rem;
-    font-size: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    .value {
+      text-align: center;
+      width: 100%;
+    }
   }
   .seatContainer {
-    margin: 1rem;
     display: flex;
+    justify-content: center;
     align-items: center;
     font-size: 1.5rem;
-    .seat {
-      padding: 0 5px;
-    }
-    .seat::after {
-      content: ',';
+    flex-direction: column;
+    gap: 0.2rem;
+    .value {
+      //   text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 20rem;
+      .seat {
+        padding: 0 5px;
+      }
+      .seat::after {
+        content: ',';
+      }
     }
   }
   .option {
@@ -61,7 +95,6 @@
     }
   }
   .checkout {
-    margin: 1rem;
     .button {
       border: none;
       background: #339af0;
@@ -69,6 +102,7 @@
       border-radius: 0.1rem;
       font-size: 1.5rem;
       font-weight: bolder;
+      padding: 0.8rem;
       cursor: pointer;
       outline: none;
       &:hover,

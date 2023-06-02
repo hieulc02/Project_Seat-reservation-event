@@ -24,7 +24,7 @@ const seatSchema = new Schema({
 
 seatSchema.statics.reservedSeats = async function (reservedSeats, eventId) {
   try {
-    const updatedSeats = await this.updateMany(
+    await this.updateMany(
       {
         _id: { $in: reservedSeats },
         eventId: eventId,
@@ -34,7 +34,6 @@ seatSchema.statics.reservedSeats = async function (reservedSeats, eventId) {
         $set: { isOccupied: true },
       }
     );
-    return updatedSeats;
   } catch (e) {
     throw new Error('Seat reservation fail!');
   }

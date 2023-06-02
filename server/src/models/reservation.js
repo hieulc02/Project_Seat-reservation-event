@@ -14,6 +14,7 @@ const reservationSchema = new Schema(
     //   required: true,
     //   trim: true,
     // },
+
     seats: [
       {
         type: Schema.Types.ObjectId,

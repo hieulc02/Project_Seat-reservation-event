@@ -39,13 +39,7 @@ exports.signup = catchAsync(async (req, res, next) => {
       error: 'Email already exists',
     });
   }
-  const newUser = new User({
-    name: req.body.name,
-    email: req.body.email,
-    role: req.body.role,
-    password: req.body.password,
-    passwordConfirm: req.body.passwordConfirm,
-  });
+  const newUser = new User({ ...req.body, role: req.body.role });
   await newUser.save();
   createSendToken(newUser, 201, req, res);
 });

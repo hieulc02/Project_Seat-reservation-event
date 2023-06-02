@@ -58,7 +58,7 @@ eventSchema.pre(/^find/, function (next) {
 
 eventSchema.statics.seatUpdated = async function (totalSeatReserved, eventId) {
   try {
-    const total = await this.updateOne(
+    await this.updateOne(
       {
         _id: { $eq: eventId },
       },
@@ -66,7 +66,6 @@ eventSchema.statics.seatUpdated = async function (totalSeatReserved, eventId) {
         $inc: { seatAvailable: -totalSeatReserved },
       }
     );
-    return total;
   } catch (e) {
     throw new Error('Invalid seat updated');
   }

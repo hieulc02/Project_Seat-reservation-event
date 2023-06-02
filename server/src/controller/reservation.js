@@ -17,14 +17,18 @@ exports.getAllReservationByUser = catchAsync(async (req, res, next) => {
 });
 exports.getReservation = factory.getOne(Reservation);
 exports.updateReservation = factory.updateOne(Reservation);
-exports.createReservationWithSeat = catchAsync(async (req, res, next) => {
-  const { selectedSeats, total, eventId } = req.body;
+exports.createReservationWithSeat = async (
+  selectedSeats,
+  total,
+  eventId,
+  user
+) => {
   const seatIds = selectedSeats.map((s) => s._id);
   const reservation = new Reservation({
     seats: seatIds,
-    total: req.body.total,
-    user: req.body.user,
-    eventId: req.body.eventId,
+    total: total,
+    user: user,
+    eventId: eventId,
   });
 
   if (!eventId) {
@@ -43,5 +47,5 @@ exports.createReservationWithSeat = catchAsync(async (req, res, next) => {
   await Event.seatUpdated(total, eventId);
   await reservation.save();
 
-  next();
-});
+  return reservation;
+};

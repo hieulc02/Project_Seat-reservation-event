@@ -81,12 +81,10 @@ exports.verifyPaymentUrl = catchAsync(async (req, res, next) => {
   let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
   if (secureHash === signed) {
     const transaction = await Transaction.findById(id);
-    console.log(transaction);
     if (!transaction) {
       return res.status(400).json({
-        status: 'fail',
+        type: 'vnpay',
         code: '97',
-        transaction,
       });
     }
 

@@ -16,6 +16,7 @@ const userRoute = require('./route/user');
 const eventRoute = require('./route/event');
 const resRoute = require('./route/reservation');
 const bookRoute = require('./route/payment');
+const { init } = require('./models/seat');
 
 dotenv.config({ path: '../config.env' });
 
@@ -49,6 +50,7 @@ app.use((req, res, next) => {
   //res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
+init(io);
 
 const setToRoom = new Set();
 io.on('connection', (socket) => {

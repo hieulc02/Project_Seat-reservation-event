@@ -1,6 +1,6 @@
 const Reservation = require('../models/reservation');
 const Event = require('../models/event');
-const Seat = require('../models/seat');
+const { Seat } = require('../models/seat');
 const factory = require('./factory');
 const catchAsync = require('../utils/catchAsync');
 

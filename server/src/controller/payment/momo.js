@@ -17,7 +17,7 @@ const createPayment = async (data) => {
   let selectedSeat = data.selectedSeats;
   let orderSeat = selectedSeat.map((s) => `${s.row}-${s.col}`).join(',');
   let orderInfo = `${orderSeat}`;
-  let amount = data.total * 10000;
+  let amount = data.amount;
   let extraData = '';
 
   const order = new Transaction({
@@ -26,9 +26,11 @@ const createPayment = async (data) => {
     total: data.total,
     user: data.user,
     eventId: data.eventId,
+    amount: data.amount,
   });
-  let requestType = 'captureWallet';
+  // let requestType = 'captureWallet';
 
+  let requestType = 'payWithATM';
   let rawSignature =
     'accessKey=' +
     accessKey +
@@ -143,6 +145,8 @@ const verifyPayment = async ({
     type: 'momo',
     resultCode,
     message,
+    reservation,
+    amount,
   };
 };
 

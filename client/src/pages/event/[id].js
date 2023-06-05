@@ -18,6 +18,7 @@ const Event = ({ id, user }) => {
   const [event, setEvent] = useState(null);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [setToRoom, setSetToRoom] = useState([]);
+  const [seatOccupied, setSeatOccupied] = useState([]);
 
   const handleSeatClick = (seat) => {
     const isSelected = selectedSeats?.some((s) => s._id === seat._id);
@@ -91,7 +92,17 @@ const Event = ({ id, user }) => {
       });
     }
   }, [setToRoom]);
-
+  useEffect(() => {
+    if (!socket.current) {
+      socket.current = io(apiEndpoint, { transports: ['websocket'] });
+    }
+    if (socket.current) {
+      socket.current?.on('seat-occupied', (params) => {
+        const deserializedParams = params.map((param) => param.toString());
+        setSeatOccupied(deserializedParams);
+      });
+    }
+  }, [seatOccupied]);
   return (
     <>
       <Layout>
@@ -116,7 +127,7 @@ const Event = ({ id, user }) => {
                   <div key={indexRow} className={styles.row}>
                     {seatRow.map((seat, indexCol) => (
                       <React.Fragment key={seat._id}>
-                        {seat.isOccupied ? (
+                        {seat.isOccupied || seatOccupied.includes(seat._id) ? (
                           <div
                             style={{ background: 'rgb(65, 66, 70)' }}
                             className={styles.occupied}

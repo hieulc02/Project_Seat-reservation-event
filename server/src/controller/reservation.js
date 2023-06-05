@@ -1,7 +1,7 @@
 const Reservation = require('../models/reservation');
 const factory = require('./factory');
 const catchAsync = require('../utils/catchAsync');
-const Seat = require('../models/seat');
+const { Seat } = require('../models/seat');
 const Event = require('../models/event');
 const AppError = require('../utils/appError');
 
@@ -32,20 +32,23 @@ exports.createReservationWithSeat = async (
   });
 
   if (!eventId) {
-    return next(
-      new AppError('Please select a seat to proceed with the checkout', 400)
+    throw new AppError(
+      'Please select a seat to proceed with the checkout',
+      400
     );
   }
-  const existingSeats = await Seat.checkExistSeats(selectedSeats, eventId);
-  if (existingSeats.length > 0) {
-    const reservedSeat = existingSeats.map((s) => ` ${s.row}-${s.col}`);
-    return next(
-      new AppError(`Seat at:${reservedSeat} already been reserved`, 400)
-    );
+  try {
+    const existingSeats = await Seat.checkExistSeats(selectedSeats, eventId);
+    if (existingSeats.length > 0) {
+      const reservedSeat = existingSeats.map((s) => ` ${s.row}-${s.col}`);
+      throw new AppError(`Seat at:${reservedSeat} already been reserved`, 400);
+    }
+    await Seat.reservedSeats(selectedSeats, eventId);
+    await Event.seatUpdated(total, eventId);
+    await reservation.save();
+    await reservation.populate('seats');
+    return reservation;
+  } catch (e) {
+    throw e;
   }
-  await Seat.reservedSeats(selectedSeats, eventId);
-  await Event.seatUpdated(total, eventId);
-  await reservation.save();
-
-  return reservation;
 };

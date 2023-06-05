@@ -21,9 +21,9 @@ exports.createPaymentUrl = catchAsync(async (req, res, next) => {
     total: req.body.total,
     user: req.body.user,
     eventId: req.body.eventId,
+    amount: req.body.amount,
   });
-  let price = req.body.ticketPrice;
-  let amount = req.body.total;
+  let amount = req.body.amount;
   let bankCode = req.body?.bankCode || '';
   let locale = req.body?.language || 'vn';
   let selectedSeat = req.body.selectedSeats;
@@ -39,7 +39,7 @@ exports.createPaymentUrl = catchAsync(async (req, res, next) => {
   vnp_Params['vnp_TxnRef'] = orderId;
   vnp_Params['vnp_OrderInfo'] = orderInfo;
   vnp_Params['vnp_OrderType'] = 'other';
-  vnp_Params['vnp_Amount'] = amount * price * 100;
+  vnp_Params['vnp_Amount'] = amount * 100;
   vnp_Params['vnp_ReturnUrl'] = returnUrl;
   vnp_Params['vnp_IpAddr'] = ipAddr;
   vnp_Params['vnp_CreateDate'] = createDate;
@@ -88,7 +88,7 @@ exports.verifyPaymentUrl = catchAsync(async (req, res, next) => {
       });
     }
 
-    const { selectedSeats, total, eventId, user } = transaction;
+    const { selectedSeats, total, eventId, user, amount } = transaction;
     const reservation = await createReservationWithSeat(
       selectedSeats,
       total,
@@ -102,6 +102,8 @@ exports.verifyPaymentUrl = catchAsync(async (req, res, next) => {
     res.status(200).json({
       type: 'vnpay',
       code: vnp_Params['vnp_ResponseCode'],
+      data: reservation,
+      amount,
     });
   } else {
     res.status(200).json({ type: 'vnpay', code: '97' });

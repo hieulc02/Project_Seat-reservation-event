@@ -28,6 +28,10 @@ const transactionSchema = new Schema(
       ref: 'Event',
       required: true,
     },
+    amount: {
+      type: Number,
+      require: true,
+    },
     isVerified: {
       type: Boolean,
       default: false,

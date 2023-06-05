@@ -48,7 +48,7 @@ const reservationSchema = new Schema(
 );
 
 reservationSchema.pre(/^find/, function (next) {
-  this.populate('user').populate('eventId').populate('seats');
+  this.populate('user').populate('eventId');
 
   next();
 });

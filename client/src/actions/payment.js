@@ -14,14 +14,14 @@ export const vnPayPayment = async (
   total,
   user,
   eventId,
-  ticketPrice
+  amount
 ) => {
   const res = await Axios.post('/vnpay_payment_url', {
     selectedSeats,
     total,
     user,
     eventId,
-    ticketPrice,
+    amount,
   });
   return res.data;
 };
@@ -36,14 +36,14 @@ export const momoPayment = async (
   total,
   user,
   eventId,
-  ticketPrice
+  amount
 ) => {
   const res = await Axios.post('/momo_payment_url', {
     selectedSeats,
     total,
     user,
     eventId,
-    ticketPrice,
+    amount,
   });
   return res.data;
 };

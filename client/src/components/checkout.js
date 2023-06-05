@@ -8,34 +8,24 @@ const BookingCheckout = ({ selectedSeats, ticketPrice, user, event }) => {
   const [total, setTotal] = useState(0);
   const [eventId, setEventId] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
+  const [amount, setAmount] = useState(selectedSeats?.length * ticketPrice);
 
   useEffect(() => {
     setTotal(selectedSeats.length);
     if (selectedSeats) {
       setEventId(selectedSeats[0]?.eventId);
     }
+    setAmount(selectedSeats?.length * ticketPrice);
   }, [selectedSeats]);
 
   const handleClick = async () => {
     try {
       let res;
       if (selectedOption === 'vnPay') {
-        res = await vnPayPayment(
-          selectedSeats,
-          total,
-          user,
-          eventId,
-          ticketPrice
-        );
+        res = await vnPayPayment(selectedSeats, total, user, eventId, amount);
         router.replace(res?.paymentUrl);
       } else {
-        res = await momoPayment(
-          selectedSeats,
-          total,
-          user,
-          eventId,
-          ticketPrice
-        );
+        res = await momoPayment(selectedSeats, total, user, eventId, amount);
         router.replace(res?.payUrl);
       }
       if (!res) {
@@ -59,9 +49,7 @@ const BookingCheckout = ({ selectedSeats, ticketPrice, user, event }) => {
         </div>
         <div className={styles.price}>
           <div>Damages: </div>
-          <div className={styles.value}>
-            {selectedSeats?.length * ticketPrice} &#x20AB;
-          </div>
+          <div className={styles.value}>{amount} &#x20AB;</div>
         </div>
         <div className={styles.seatContainer}>
           <div>Seat: </div>

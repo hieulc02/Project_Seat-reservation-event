@@ -22,6 +22,13 @@ const seatSchema = new Schema({
   },
 });
 
+let ioInstance;
+
+const init = (io) => {
+  ioInstance = io;
+};
+
+const seatOccupied = new Set();
 seatSchema.statics.reservedSeats = async function (reservedSeats, eventId) {
   try {
     await this.updateMany(
@@ -34,6 +41,14 @@ seatSchema.statics.reservedSeats = async function (reservedSeats, eventId) {
         $set: { isOccupied: true },
       }
     );
+    reservedSeats.forEach((seat) => {
+      seatOccupied.add(seat._id);
+    });
+    const serializedSet = [...seatOccupied.values()];
+    ioInstance
+      .to(`event/${reservedSeats[0].eventId}`)
+      .emit('seat-occupied', serializedSet);
+    seatOccupied.clear();
   } catch (e) {
     throw new Error('Seat reservation fail!');
   }
@@ -62,4 +77,4 @@ seatSchema.statics.deleteSeatEvent = async function (id) {
 };
 const Seat = mongoose.model('Seat', seatSchema);
 
-module.exports = Seat;
+module.exports = { Seat, init };

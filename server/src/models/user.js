@@ -41,6 +41,9 @@ const userSchema = new Schema(
         message: 'Password are not the same',
       },
     },
+    image: {
+      type: String,
+    },
   },
   {
     timestamps: true,

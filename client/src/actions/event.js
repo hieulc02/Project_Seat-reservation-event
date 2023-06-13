@@ -26,6 +26,15 @@ export const getEvent = async (id) => {
   return res.data.doc;
 };
 
+export const getAllEventsPending = async () => {
+  const res = await Axios.get('/pending');
+  return res.data;
+};
+
+export const updateEventStatus = async (id, status) => {
+  const res = await Axios.put(`/${id}`, { status });
+  return res.data;
+};
 export const deleteEvent = async (id) => {
   const res = await Axios.delete(`/${id}`);
   return res.data;

@@ -24,11 +24,34 @@ const seatSchema = new Schema({
 
 let ioInstance;
 
-const init = (io) => {
+const initSeat = (io) => {
   ioInstance = io;
 };
 
 const seatOccupied = new Set();
+const mapOccupied = new Map();
+let key;
+
+const updateTempSeat = (reservedSeats) => {
+  key = `event/${reservedSeats[0].eventId}`;
+  if (mapOccupied.get(key)) {
+    reservedSeats.forEach((seat) => {
+      seatOccupied.add(seat._id);
+    });
+    const serializedSet = [...seatOccupied.values()];
+    mapOccupied.set(key, serializedSet);
+  } else {
+    seatOccupied.clear();
+    reservedSeats.forEach((seat) => {
+      seatOccupied.add(seat._id);
+    });
+    const serializedSet = [...seatOccupied.values()];
+    mapOccupied.set(key, serializedSet);
+  }
+  const event = mapOccupied.get(key);
+  ioInstance.to(key).emit('seat-occupied', event);
+};
+
 seatSchema.statics.reservedSeats = async function (reservedSeats, eventId) {
   try {
     await this.updateMany(
@@ -41,14 +64,6 @@ seatSchema.statics.reservedSeats = async function (reservedSeats, eventId) {
         $set: { isOccupied: true },
       }
     );
-    reservedSeats.forEach((seat) => {
-      seatOccupied.add(seat._id);
-    });
-    const serializedSet = [...seatOccupied.values()];
-    ioInstance
-      .to(`event/${reservedSeats[0].eventId}`)
-      .emit('seat-occupied', serializedSet);
-    seatOccupied.clear();
   } catch (e) {
     throw new Error('Seat reservation fail!');
   }
@@ -71,10 +86,11 @@ seatSchema.statics.deleteSeatEvent = async function (id) {
     await this.deleteMany({
       eventId: { $eq: id },
     });
+    mapOccupied.delete(key);
   } catch (e) {
     throw new Error('Fail to delete seat');
   }
 };
 const Seat = mongoose.model('Seat', seatSchema);
 
-module.exports = { Seat, init };
+module.exports = { Seat, initSeat, updateTempSeat };

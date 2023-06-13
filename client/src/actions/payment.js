@@ -14,6 +14,8 @@ export const vnPayPayment = async (
   total,
   user,
   eventId,
+  date,
+  venue,
   amount
 ) => {
   const res = await Axios.post('/vnpay_payment_url', {
@@ -21,6 +23,8 @@ export const vnPayPayment = async (
     total,
     user,
     eventId,
+    date,
+    venue,
     amount,
   });
   return res.data;
@@ -36,6 +40,8 @@ export const momoPayment = async (
   total,
   user,
   eventId,
+  date,
+  venue,
   amount
 ) => {
   const res = await Axios.post('/momo_payment_url', {
@@ -43,8 +49,11 @@ export const momoPayment = async (
     total,
     user,
     eventId,
+    date,
+    venue,
     amount,
   });
+
   return res.data;
 };
 

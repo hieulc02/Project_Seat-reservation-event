@@ -1,7 +1,7 @@
 const Reservation = require('../models/reservation');
 const factory = require('./factory');
 const catchAsync = require('../utils/catchAsync');
-const { Seat } = require('../models/seat');
+const { Seat, updateTempSeat } = require('../models/seat');
 const Event = require('../models/event');
 const AppError = require('../utils/appError');
 
@@ -18,6 +18,8 @@ exports.getAllReservationByUser = catchAsync(async (req, res, next) => {
 exports.getReservation = factory.getOne(Reservation);
 exports.updateReservation = factory.updateOne(Reservation);
 exports.createReservationWithSeat = async (
+  date,
+  venue,
   selectedSeats,
   total,
   eventId,
@@ -25,6 +27,8 @@ exports.createReservationWithSeat = async (
 ) => {
   const seatIds = selectedSeats.map((s) => s._id);
   const reservation = new Reservation({
+    date: date,
+    venue: venue,
     seats: seatIds,
     total: total,
     user: user,
@@ -43,8 +47,15 @@ exports.createReservationWithSeat = async (
       const reservedSeat = existingSeats.map((s) => ` ${s.row}-${s.col}`);
       throw new AppError(`Seat at:${reservedSeat} already been reserved`, 400);
     }
-    await Seat.reservedSeats(selectedSeats, eventId);
-    await Event.seatUpdated(total, eventId);
+
+    if (reservation) {
+      await Promise.all([
+        Seat.reservedSeats(selectedSeats, eventId),
+        Event.seatUpdated(total, eventId),
+      ]);
+      updateTempSeat(selectedSeats);
+    }
+
     await reservation.save();
     await reservation.populate('seats');
     return reservation;

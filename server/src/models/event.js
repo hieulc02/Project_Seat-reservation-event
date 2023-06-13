@@ -2,6 +2,12 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const eventSchema = new Schema({
+  status: {
+    type: String,
+    enum: ['pending', 'approved'],
+    default: 'pending',
+    required: true,
+  },
   name: {
     type: String,
     required: true,
@@ -11,11 +17,20 @@ const eventSchema = new Schema({
     type: String,
     require: true,
   },
-  // startAt: {
-  //   type: String,
-  //   required: true,
-  //   trim: true,
-  // },
+  venue: {
+    type: String,
+    enum: ['HCMC', 'HaNoi', 'Others'],
+    default: 'HCMC',
+    require: true,
+  },
+  dateStart: {
+    type: String,
+    required: true,
+  },
+  dateEnd: {
+    type: String,
+    required: true,
+  },
   row: {
     type: Number,
     require: true,
@@ -43,7 +58,7 @@ const eventSchema = new Schema({
   },
   createAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now(),
   },
   image: String,
 });

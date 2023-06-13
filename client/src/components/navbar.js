@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import styles from '../styles/navbar.module.scss';
-import ButtonLogout from './logout';
+import DropDownMenu from './dropdown';
 const Navbar = () => {
   return (
     <>
@@ -16,8 +16,11 @@ const Navbar = () => {
           <div className={styles.reservation}>
             <Link href="/reservation">Reservation</Link>
           </div>
-          <ButtonLogout />
+          <div className={styles.reservation}>
+            <Link href="/event/add-event">Create Event</Link>
+          </div>
         </div>
+        <DropDownMenu />
       </div>
     </>
   );

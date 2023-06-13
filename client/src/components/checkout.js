@@ -9,6 +9,8 @@ const BookingCheckout = ({ selectedSeats, ticketPrice, user, event }) => {
   const [eventId, setEventId] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   const [amount, setAmount] = useState(selectedSeats?.length * ticketPrice);
+  const [date, setDate] = useState('');
+  const [venue, setVenue] = useState(event.venueDetail);
 
   useEffect(() => {
     setTotal(selectedSeats.length);
@@ -16,17 +18,36 @@ const BookingCheckout = ({ selectedSeats, ticketPrice, user, event }) => {
       setEventId(selectedSeats[0]?.eventId);
     }
     setAmount(selectedSeats?.length * ticketPrice);
+    setDate(`${event.dateStart} - ${event.dateEnd}`);
+    setVenue(event.venue);
   }, [selectedSeats]);
 
   const handleClick = async () => {
     try {
       let res;
       if (selectedOption === 'vnPay') {
-        res = await vnPayPayment(selectedSeats, total, user, eventId, amount);
+        res = await vnPayPayment(
+          selectedSeats,
+          total,
+          user,
+          eventId,
+          date,
+          venue,
+          amount
+        );
         router.replace(res?.paymentUrl);
       } else {
-        res = await momoPayment(selectedSeats, total, user, eventId, amount);
+        res = await momoPayment(
+          selectedSeats,
+          total,
+          user,
+          eventId,
+          date,
+          venue,
+          amount
+        );
         router.replace(res?.payUrl);
+        // console.log(res?.payUrl);
       }
       if (!res) {
         return;
@@ -48,8 +69,13 @@ const BookingCheckout = ({ selectedSeats, ticketPrice, user, event }) => {
           <div className={styles.value}>{selectedSeats?.length}</div>
         </div>
         <div className={styles.price}>
-          <div>Damages: </div>
-          <div className={styles.value}>{amount} &#x20AB;</div>
+          <div>Sum of damages: </div>
+          <div className={styles.value}>
+            {new Intl.NumberFormat('vi-VN', {
+              style: 'currency',
+              currency: 'VND',
+            }).format(amount)}
+          </div>
         </div>
         <div className={styles.seatContainer}>
           <div>Seat: </div>

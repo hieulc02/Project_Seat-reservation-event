@@ -17,13 +17,11 @@ const filterObj = (obj, ...allowedFields) => {
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   const filterBody = filterObj(req.body, 'name', 'email');
-
-  const updateUser = await User.findByIdAndUpdate(req.user.id, filterBody, {
-    new: true,
+  await User.findByIdAndUpdate(req.body._id, filterBody, {
     runValidators: true,
   });
 
-  res.status(200).send(updateUser);
+  res.status(200).json({ status: 'Updated successfully' });
 });
 
 exports.getUser = factory.getOne(User);

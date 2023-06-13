@@ -1,0 +1,19 @@
+.container {
+  background: green;
+  width: 10rem;
+  height: 100rem;
+  ul {
+    list-style-type: none;
+    li {
+      padding: 1rem;
+      background: yellow;
+      border: 1px solid black;
+
+      a {
+        text-decoration: none;
+        color: #212529;
+        font-size: 1rem;
+      }
+    }
+  }
+}

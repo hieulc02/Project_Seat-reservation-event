@@ -5,16 +5,13 @@ const { Schema } = mongoose;
 const reservationSchema = new Schema(
   {
     date: {
-      type: Date,
-      default: Date.now,
+      type: String,
       required: true,
     },
-    // startAt: {
-    //   type: String,
-    //   required: true,
-    //   trim: true,
-    // },
-
+    venue: {
+      type: String,
+      require: true,
+    },
     seats: [
       {
         type: Schema.Types.ObjectId,
@@ -48,7 +45,7 @@ const reservationSchema = new Schema(
 );
 
 reservationSchema.pre(/^find/, function (next) {
-  this.populate('user').populate('eventId');
+  this.populate('user').populate('eventId').populate('seats');
 
   next();
 });

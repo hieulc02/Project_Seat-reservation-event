@@ -12,11 +12,11 @@ eventRoute
   .get(eventController.getAllEvents)
   .post(
     authController.protect,
-    authController.restrictTo('admin'),
     upload.single('file'),
     imageController.imageToCloudinary,
     eventController.createEventWithSeat
   );
+eventRoute.get('/pending', eventController.getAllEventsPending);
 eventRoute
   .route('/:id')
   .get(eventController.getEvent)
@@ -24,6 +24,11 @@ eventRoute
     authController.protect,
     authController.restrictTo('admin'),
     eventController.updateEvent
+  )
+  .put(
+    authController.protect,
+    authController.restrictTo('admin'),
+    eventController.updateEventStatus
   )
   .delete(
     authController.protect,

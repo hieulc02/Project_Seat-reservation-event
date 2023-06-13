@@ -16,12 +16,14 @@ exports.createPaymentUrl = catchAsync(async (req, res, next) => {
 
   let orderId = moment(date).format('DDHHmmss');
   const order = new Transaction({
-    _id: orderId,
+    _id: Number(orderId),
     selectedSeats: req.body.selectedSeats,
     total: req.body.total,
     user: req.body.user,
     eventId: req.body.eventId,
     amount: req.body.amount,
+    date: req.body.date,
+    venue: req.body.venue
   });
   let amount = req.body.amount;
   let bankCode = req.body?.bankCode || '';
@@ -84,21 +86,26 @@ exports.verifyPaymentUrl = catchAsync(async (req, res, next) => {
     if (!transaction) {
       return res.status(400).json({
         type: 'vnpay',
-        code: '97',
+        code: '99',
       });
     }
 
-    const { selectedSeats, total, eventId, user, amount } = transaction;
+    const { selectedSeats, total, eventId, user, amount, date, venue} = transaction;
     const reservation = await createReservationWithSeat(
+      date,
+      venue,
       selectedSeats,
       total,
       eventId,
       user
     );
     if (reservation) {
-      await Transaction.updateTransactionVerify(id, user);
+      await Promise.all([
+        Transaction.updateTransactionVerify(id, user),
+        Transaction.deleteTransactionFail(user),
+      ]);
     }
-    await Transaction.deleteTransactionFail(user);
+
     res.status(200).json({
       type: 'vnpay',
       code: vnp_Params['vnp_ResponseCode'],

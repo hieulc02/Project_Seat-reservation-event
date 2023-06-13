@@ -32,6 +32,14 @@ const transactionSchema = new Schema(
       type: Number,
       require: true,
     },
+    date: {
+      type: String,
+      require: true,
+    },
+    venue: {
+      type: String,
+      require: true,
+    },
     isVerified: {
       type: Boolean,
       default: false,

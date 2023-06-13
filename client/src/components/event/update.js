@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { getAllEvent, updateEvent, deleteEvent } from '../../actions/event';
 import styles from '../../styles/event.module.scss';
 import SearchBar from '../search';
+import Router from 'next/router';
 const UpdateEvent = () => {
   const [editMode, setEditMode] = useState(false);
   const [event, setEvent] = useState([]);
@@ -53,7 +54,12 @@ const UpdateEvent = () => {
   const handleSearch = (searchTerm) => {
     setSearchTerm(searchTerm);
   };
-
+  const handleAddClick = () => {
+    Router.push('/event/add-event');
+  };
+  const handleWaitingList = () => {
+    Router.push('/admin/waiting-list');
+  };
   const filterEvent = event.filter((e) => {
     const name = e.name.toLowerCase();
     const description = e.description.toLowerCase();
@@ -63,27 +69,45 @@ const UpdateEvent = () => {
   return (
     <>
       <div className={styles.updateContainer}>
-        <SearchBar onSearch={handleSearch} />
-        <div className={styles.header}>
-          <div className={styles.name}>Name</div>
-          <div className={styles.des}>Description</div>
-          <div className={styles.price}>Price</div>
-          <div className={styles.amount}>Seat</div>
-          <div className={styles.row}>Row</div>
-          <div className={styles.col}>Col</div>
+        <div className={styles.boxContainer}>
+          <SearchBar onSearch={handleSearch} />
+          <div onClick={handleAddClick} className={styles.box}>
+            Add
+          </div>
+          <div onClick={handleWaitingList} className={styles.box}>
+            Waiting list
+          </div>
         </div>
-        <div className={styles.tableContainer}>
-          {filterEvent?.map((e, i) => (
-            <React.Fragment key={i}>
-              <div className={styles.tableEvent} key={e._id}>
-                <img
-                  src={e.image}
-                  alt="event-picture"
-                  style={{ width: '5rem' }}
-                />
-                <div className={styles.name}>
-                  {editMode && editEventId === e?._id ? (
-                    <input
+        <table>
+          <thead>
+            <tr>
+              <th>Status</th>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Venue</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Price</th>
+              <th>Seat</th>
+              <th>Row</th>
+              <th>Column</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filterEvent?.map((e, i) =>
+              editMode && editEventId === e?._id ? (
+                <tr key={i}>
+                  <td>{e.status}</td>
+                  <td>
+                    <img
+                      src={e.image}
+                      alt="event-picture"
+                      style={{ width: '5rem' }}
+                    />
+                  </td>
+                  <td>
+                    <textarea
                       type="text"
                       value={updatedEvent?.name}
                       onChange={(e) =>
@@ -93,13 +117,9 @@ const UpdateEvent = () => {
                         })
                       }
                     />
-                  ) : (
-                    e.name
-                  )}
-                </div>
-                <div className={styles.description}>
-                  {editMode && editEventId === e?._id ? (
-                    <input
+                  </td>
+                  <td>
+                    <textarea
                       type="text"
                       value={updatedEvent?.description}
                       onChange={(e) =>
@@ -109,13 +129,32 @@ const UpdateEvent = () => {
                         })
                       }
                     />
-                  ) : (
-                    e.description
-                  )}
-                </div>
-
-                <div className={styles.ticketPrice}>
-                  {editMode && editEventId === e?._id ? (
+                  </td>
+                  <td>
+                    <input
+                      type="date"
+                      value={updatedEvent?.dateStart}
+                      onChange={(e) =>
+                        setUpdatedEvent({
+                          ...updatedEvent,
+                          dateStart: e.target.value,
+                        })
+                      }
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="date"
+                      value={updatedEvent?.dateEnd}
+                      onChange={(e) =>
+                        setUpdatedEvent({
+                          ...updatedEvent,
+                          dateEnd: e.target.value,
+                        })
+                      }
+                    />
+                  </td>
+                  <td>
                     <input
                       type="text"
                       value={updatedEvent?.ticketPrice}
@@ -126,38 +165,57 @@ const UpdateEvent = () => {
                         })
                       }
                     />
-                  ) : (
-                    e.ticketPrice
-                  )}
-                </div>
-                <div className={styles.seat}>{e.seatAvailable}</div>
-                <div className={styles.row}>{e.row}</div>
-                <div className={styles.col}>{e.col}</div>
-                {editMode && editEventId === e?._id ? (
-                  <button
-                    className={styles.update}
-                    onClick={() => handleUpdateCLick(e._id, updatedEvent)}
-                  >
-                    Update
-                  </button>
-                ) : (
-                  <button
-                    className={styles.update}
-                    onClick={() => handleEditClick(e._id)}
-                  >
-                    Edit
-                  </button>
-                )}
-                <button
-                  className={styles.delete}
-                  onClick={() => handleDeleteClick(e._id)}
-                >
-                  Delete
-                </button>
-              </div>
-            </React.Fragment>
-          ))}
-        </div>
+                  </td>
+                  <td>{e.seatAvailable}</td>
+                  <td>{e.row}</td>
+                  <td>{e.col}</td>
+                  <td>
+                    <button
+                      className={styles.update}
+                      onClick={() => handleUpdateCLick(e._id, updatedEvent)}
+                    >
+                      Update
+                    </button>
+                  </td>
+                </tr>
+              ) : (
+                <tr key={i}>
+                  <td>{e.status}</td>
+                  <td>
+                    <img
+                      src={e.image}
+                      alt="event-picture"
+                      style={{ width: '5rem' }}
+                    />
+                  </td>
+                  <td>{e.name}</td>
+                  <td>{e.description}</td>
+                  <td>{e.venue}</td>
+                  <td>{e.dateStart}</td>
+                  <td>{e.dateEnd}</td>
+                  <td>{e.ticketPrice}</td>
+                  <td>{e.seatAvailable}</td>
+                  <td>{e.row}</td>
+                  <td>{e.col}</td>
+                  <td>
+                    <button
+                      className={styles.update}
+                      onClick={() => handleEditClick(e._id)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className={styles.delete}
+                      onClick={() => handleDeleteClick(e._id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              )
+            )}
+          </tbody>
+        </table>
       </div>
     </>
   );

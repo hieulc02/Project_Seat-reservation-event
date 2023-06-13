@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { createEvent, imageToCloudinary } from '../../actions/event';
-import Router from 'next/router';
+import { createEvent } from '../../actions/event';
 import styles from '../../styles/event.module.scss';
 import { toast } from 'react-toastify';
 
-const AddEvent = () => {
+const AddEvent = ({ user }) => {
   const [event, setEvent] = useState({
     name: '',
     description: '',
+    venue: '',
+    dateStart: '',
+    dateEnd: '',
     row: '',
     col: '',
     ticketPrice: '',
@@ -15,20 +17,30 @@ const AddEvent = () => {
   });
   const [selectedImage, setSelectedImage] = useState(null);
   const [previewSource, setPreviewSource] = useState('');
-  const { name, description, row, col, ticketPrice } = event;
+  const {
+    name,
+    description,
+    venue,
+    dateStart,
+    dateEnd,
+    row,
+    col,
+    ticketPrice,
+  } = event;
+  const venueOptions = ['HCMC', 'HaNoi', 'Others'];
 
   const handleChange = (name) => {
     return (e) => {
       setEvent({ ...event, [name]: e.target.value });
     };
   };
-
   const handleSubmit = async () => {
     if (!selectedImage) return;
+    const formData = new FormData();
+    formData.append('file', selectedImage);
+    formData.append('data', JSON.stringify(event));
+    formData.append('user', JSON.stringify(user));
     try {
-      const formData = new FormData();
-      formData.append('file', selectedImage);
-      formData.append('data', JSON.stringify(event));
       const res = await createEvent(formData);
       toast.success(res.status);
       setSelectedImage(null);
@@ -36,11 +48,16 @@ const AddEvent = () => {
       setEvent({
         name: '',
         description: '',
+        dateStart: '',
+        dateEnd: '',
         row: '',
         col: '',
         ticketPrice: '',
         image: '',
       });
+      document.getElementById('start').value = '';
+      document.getElementById('end').value = '';
+      document.getElementById('image').value = null;
     } catch (e) {
       console.log(e.response);
       //  toast.error(e.response);
@@ -66,10 +83,10 @@ const AddEvent = () => {
   };
   return (
     <>
-      <div className={styles.container}>
-        <div className={styles.wrapper}>
+      <div className={styles.addContainer}>
+        <div className={styles.addWrapper}>
           <div>
-            <input type="file" onChange={handleImageChange} />
+            <input type="file" id="image" onChange={handleImageChange} />
             {previewSource && (
               <img
                 src={previewSource}
@@ -97,7 +114,7 @@ const AddEvent = () => {
             <label htmlFor="description" className={styles.label}>
               Description
             </label>
-            <input
+            <textarea
               type="text"
               id="description"
               className={styles.input}
@@ -106,6 +123,45 @@ const AddEvent = () => {
               placeholder="Description"
               required
               minLength="5"
+            />
+          </div>
+          <div>
+            <label htmlFor="option-venue">Venue: </label>
+            <select
+              id="option-venue"
+              value={venue}
+              onChange={handleChange('venue')}
+            >
+              <option>Select venue</option>
+              {venueOptions.map((e, i) => (
+                <option value={e} key={i}>
+                  {e}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="startDate" className={styles.label}>
+              Start date:
+            </label>
+            <input
+              type="date"
+              id="start"
+              className={styles.input}
+              value={dateStart}
+              onChange={handleChange('dateStart')}
+            />
+          </div>
+          <div>
+            <label htmlFor="endDate" className={styles.label}>
+              End date:
+            </label>
+            <input
+              type="date"
+              id="end"
+              className={styles.input}
+              value={dateEnd}
+              onChange={handleChange('dateEnd')}
             />
           </div>
           <div>

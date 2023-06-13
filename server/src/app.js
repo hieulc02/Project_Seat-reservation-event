@@ -16,7 +16,7 @@ const userRoute = require('./route/user');
 const eventRoute = require('./route/event');
 const resRoute = require('./route/reservation');
 const bookRoute = require('./route/payment');
-const { init } = require('./models/seat');
+const { initSeat } = require('./models/seat');
 
 dotenv.config({ path: '../config.env' });
 
@@ -50,7 +50,7 @@ app.use((req, res, next) => {
   //res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   next();
 });
-init(io);
+initSeat(io);
 
 const setToRoom = new Set();
 io.on('connection', (socket) => {
@@ -96,6 +96,10 @@ io.on('connection', (socket) => {
     }
     const serializedSet = [...setToRoom.values()];
     socket.broadcast?.to(params.room)?.emit('seat-book', serializedSet);
+  });
+
+  socket.on('event-approve', (event) => {
+    socket.broadcast.emit('event-update', { ...event, tempStatus: 'approved' });
   });
 });
 

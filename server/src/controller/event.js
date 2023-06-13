@@ -10,9 +10,15 @@ exports.updateEvent = factory.updateOne(Event);
 
 exports.deleteEventWithSeat = catchAsync(async (req, res, next) => {
   const { id } = req.params;
-  await Event.findByIdAndDelete(id);
-  await Seat.deleteSeatEvent(id);
-  await Reservation.deleteReservationEvent(id);
+  const deleteEventPromise = Event.findByIdAndDelete(id);
+  const deleteSeatPromise = Seat.deleteSeatEvent(id);
+  const deleteReservationPromise = Reservation.deleteReservationEvent(id);
+
+  await Promise.all([
+    deleteEventPromise,
+    deleteSeatPromise,
+    deleteReservationPromise,
+  ]);
   res.status(204).json({
     status: 'success',
   });
@@ -20,6 +26,7 @@ exports.deleteEventWithSeat = catchAsync(async (req, res, next) => {
 
 exports.createEventWithSeat = catchAsync(async (req, res, next) => {
   const data = JSON.parse(req.body.data);
+  const user = JSON.parse(req.body.user);
   const event = new Event({ ...data, image: req.body.image });
   const rows = event.row;
   const col = event.col;
@@ -36,25 +43,45 @@ exports.createEventWithSeat = catchAsync(async (req, res, next) => {
 
   const seats = [];
   for (let i = 0; i < rows; i++) {
-    const row = [];
+    const rows = [];
     for (let j = 0; j < col; j++) {
       const seat = await Seat.create({
         row: i + 1,
         col: j + 1,
         eventId: event._id,
       });
-      row.push(seat);
+      rows.push(seat);
     }
-    seats.push(row);
+    seats.push(rows);
   }
-  event.seats = await Promise.all(seats);
-  event.seatAvailable = seats.flat().length;
-
+  const createdSeats = await Promise.all(seats);
+  if (user.role === 'admin') {
+    event.status = 'approved';
+  }
+  event.seats = createdSeats;
+  event.seatAvailable = rows * col;
   await event.save();
+
   res.status(201).json({
     status: 'Event created successfully',
-    data: {
-      event,
-    },
   });
+});
+
+exports.getAllEventsPending = catchAsync(async (req, res, next) => {
+  const event = await Event.find({ status: 'pending' });
+
+  res.status(200).json(event);
+});
+
+exports.updateEventStatus = catchAsync(async (req, res, next) => {
+  const eventId = req.params.id;
+  const { status } = req.body;
+
+  const event = await Event.findByIdAndUpdate(
+    eventId,
+    { status },
+    { new: true }
+  );
+
+  res.status(200).json({ status: 'success', event });
 });

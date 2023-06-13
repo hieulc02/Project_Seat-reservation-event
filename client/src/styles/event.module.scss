@@ -16,154 +16,102 @@
   font-weight: bold;
   font-family: Arial, Helvetica, sans-serif;
 }
-.container {
-  margin-top: 1rem;
+.wrapper {
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
-  box-sizing: border-box;
-
-  .eventLink {
-    text-decoration: none;
+  .container {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: repeat(3, 25rem);
+    gap: 2.5rem;
+    box-sizing: border-box;
     .eventCard {
+      position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      width: 15rem;
-      box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.2);
+      height: 100%;
+      box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.395);
       padding: 5px;
-      .eventName {
-        margin: 1px;
+      font-family: Arial, Helvetica, sans-serif;
+      .eventLink {
+        position: absolute;
+        top: 0;
+        text-decoration: none;
+        .image {
+          margin-bottom: 0.5rem;
+        }
+        .eventName {
+          font-weight: bold;
+          color: #343a40;
+        }
       }
-      .eventDescription {
-        margin: 1px;
+      .eventPriceAndDate {
+        margin-top: 14rem;
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+        .price {
+          font-weight: bold;
+          color: #1c7ed6;
+        }
+        .date {
+          display: flex;
+          align-items: center;
+        }
       }
-      .eventSeat {
-        margin: 1px;
+      .eventTotalAndVenue {
+        margin-top: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        .venue {
+          border: 1px solid #868e96;
+          padding: 0.5rem 1.5rem;
+        }
       }
     }
   }
 }
-
 .updateContainer {
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  .header {
+  .boxContainer {
     display: flex;
-    justify-content: flex-start;
+    gap: 5rem;
     align-items: center;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: bold;
-    width: max-content;
-    gap: 3rem;
-    .name {
+    justify-content: center;
+    margin-bottom: 1rem;
+    .box {
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-    .des {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .price {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .amount {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .col {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      border: 2px solid black;
+      width: 8rem;
+      height: 3rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
-  .tableContainer {
-    display: flex;
-    flex-direction: column;
+  table {
+    border-collapse: collapse;
     width: 100%;
-    justify-content: center;
-    align-items: center;
-    .tableEvent {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    th,
+    td {
       border: 1px solid black;
-      width: max-content;
-      font-family: Arial, Helvetica, sans-serif;
-      margin-top: 0.5rem;
-      border-right: none;
-      border-left: none;
-
-      .name {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 7rem;
-        height: max-content;
-        margin-left: 1.5rem;
-        input {
-          width: 100%;
-          border: 1px solid black;
-          box-sizing: border-box;
-        }
-      }
-      .description {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 9rem;
-        height: max-content;
-        input {
-          width: 90%;
-          border: 1px solid black;
-          box-sizing: border-box;
-        }
-      }
-      .ticketPrice {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: max-content;
-        margin-left: 1rem;
-        input {
-          width: 50%;
-          border: 1px solid black;
-          box-sizing: border-box;
-        }
-      }
-      .seat {
-        margin-left: 5rem;
-      }
-      .row {
-        margin-left: 5rem;
-      }
-      .col {
-        margin-left: 5rem;
-      }
-      .update {
-        width: 4rem;
-        height: 2rem;
-        margin-right: 0.5rem;
-        margin-left: 1.5rem;
-      }
-      .delete {
-        width: 4rem;
-        height: 2rem;
-      }
+      text-align: center;
+      font-size: 2rem;
     }
   }
 }

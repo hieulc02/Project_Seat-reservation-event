@@ -16,6 +16,7 @@ const Reservation = ({ user }) => {
         const res = await getReservationByUser(user?._id);
         if (!res) return;
         const data = res.userReservation;
+        console.log(data);
         const doc = data.map((res) => res);
         setUserReservation(doc);
         setIsLoading(false);

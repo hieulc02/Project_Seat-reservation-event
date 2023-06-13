@@ -1,12 +1,10 @@
 import Head from 'next/head';
-import React, { useEffect, useRef } from 'react';
-import styles from '../styles/Home.module.css';
-import ButtonLogout from '../components/logout';
+import React from 'react';
+import styles from '../styles/home.module.scss';
 import Layout from '../components/layout';
 import axios from 'axios';
 import apiEndpoint from '../apiConfig';
-import { cookies } from 'next/dist/client/components/headers';
-// import Link from 'next/link';
+import SlideBar from '../components/slideBar';
 
 const Home = ({ user }) => {
   return (
@@ -18,8 +16,9 @@ const Home = ({ user }) => {
         </Head>
 
         <main>
-          <div>
-            <h1 className={styles.title}>Welcome back {user?.name}</h1>
+          <div className={styles.main}>
+            <div className={styles.carousel}></div>
+            <SlideBar />
           </div>
         </main>
       </div>

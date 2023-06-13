@@ -5,15 +5,12 @@ const Transaction = require('../../models/transaction');
 const { createReservationWithSeat } = require('../reservation');
 const createPayment = async (data) => {
   let config = require('../../utils/momo');
-  let accessKey = config.accessKey;
-  let secretKey = config.secretKey;
-  let partnerCode = config.partnerCode;
-  let redirectUrl = config.redirectUrl;
-  let ipnUrl = redirectUrl;
-  let url = config.url;
 
-  let requestId = partnerCode + new Date().getTime();
+  const { accessKey, secretKey, partnerCode, redirectUrl, url } = config;
+  let ipnUrl = redirectUrl;
+
   let orderId = new Date().getTime();
+  let requestId = partnerCode + orderId;
   let selectedSeat = data.selectedSeats;
   let orderSeat = selectedSeat.map((s) => `${s.row}-${s.col}`).join(',');
   let orderInfo = `${orderSeat}`;
@@ -27,10 +24,12 @@ const createPayment = async (data) => {
     user: data.user,
     eventId: data.eventId,
     amount: data.amount,
+    date: data.date,
+    venue: data.venue,
   });
-  // let requestType = 'captureWallet';
+  let requestType = 'captureWallet';
 
-  let requestType = 'payWithATM';
+  // let requestType = 'payWithATM';
   let rawSignature =
     'accessKey=' +
     accessKey +
@@ -102,42 +101,47 @@ const verifyPayment = async ({
   signature,
 }) => {
   let config = require('../../utils/momo');
-  let accessKey = config.accessKey;
-  let secretKey = config.secretKey;
+  const { accessKey, secretKey } = config;
+  let reservation;
   const signatureRaw = `accessKey=${accessKey}&amount=${amount}&extraData=${extraData}&message=${message}&orderId=${orderId}&orderInfo=${orderInfo}&orderType=${orderType}&partnerCode=${partnerCode}&payType=${payType}&requestId=${requestId}&responseTime=${responseTime}&resultCode=${resultCode}&transId=${transId}`;
   try {
     const signatureValue = await crypto
       .createHmac('sha256', secretKey)
       .update(signatureRaw)
       .digest('hex');
+
     if (signatureValue !== signature) {
-      return { resultCode: '99', error: 'The transaction was not completed.' };
+      return { resultCode: '20', error: 'Bad format request.' };
     }
-    if (resultCode.toString() !== '0') {
+    if (resultCode !== '0') {
       return {
         resultCode: '99',
-        error: 'Process payment failed.',
+        error: 'Unknown error.',
       };
     }
     const transaction = await Transaction.findById(orderId);
     if (!transaction) {
       return {
-        resultCode: '99',
-        error: 'Process payment failed.',
+        resultCode: '42',
+        error: 'Invalid orderId or orderId is not found.	',
       };
     }
 
-    const { selectedSeats, total, eventId, user } = transaction;
-    const reservation = await createReservationWithSeat(
+    const { selectedSeats, total, eventId, user, date, venue } = transaction;
+    reservation = await createReservationWithSeat(
+      date,
+      venue,
       selectedSeats,
       total,
       eventId,
       user
     );
     if (reservation) {
-      await Transaction.updateTransactionVerify(orderId, user);
+      await Promise.all([
+        Transaction.updateTransactionVerify(orderId, user),
+        Transaction.deleteTransactionFail(user),
+      ]);
     }
-    await Transaction.deleteTransactionFail(user);
   } catch (e) {
     throw e;
   }

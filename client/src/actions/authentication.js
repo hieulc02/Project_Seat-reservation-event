@@ -15,7 +15,29 @@ export const login = async (email, password) => {
   setToken(res.data?.token);
   return res.data;
 };
+export const updateMe = async (updateUser) => {
+  const res = await axios.patch(
+    `${apiEndpoint}/api/users/updateMe`,
+    updateUser,
+    {
+      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('token' || 'jwt')}`,
+      },
+    }
+  );
+  return res.data;
+};
 
+export const getMe = async () => {
+  const res = await Axios.get('me', {
+    withCredentials: true,
+    headers: {
+      Authorization: `Bearer ${Cookies.get('token' || 'jwt')}`,
+    },
+  });
+  return res.data;
+};
 export const signup = async (user) => {
   const res = await Axios.post('/signup', user);
   setToken(res.data?.token);

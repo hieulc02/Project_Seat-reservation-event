@@ -19,8 +19,8 @@ const eventSchema = new Schema({
   },
   venue: {
     type: String,
-    enum: ['HCMC', 'HaNoi', 'Others'],
-    default: 'HCMC',
+    enum: ['AllVenue', 'HCMC', 'HaNoi', 'Others'],
+    default: 'AllVenue',
     require: true,
   },
   dateStart: {
@@ -56,7 +56,7 @@ const eventSchema = new Schema({
     type: Number,
     required: true,
   },
-  createAt: {
+  createdAt: {
     type: Date,
     default: Date.now(),
   },

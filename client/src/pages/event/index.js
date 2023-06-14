@@ -11,13 +11,13 @@ import apiEndpoint from '../../apiConfig';
 const ShowEvents = ({ events }) => {
   const socket = useRef(null);
   const [data, setData] = useState(events);
-
+  const venueOptions = ['AllVenue', 'HCMC', 'HaNoi', 'Others'];
+  const [venue, setVenue] = useState('');
   useEffect(() => {
     const fetchData = async () => {
       try {
         const docs = await getAllEvent();
-        const d = docs.map((doc) => doc);
-        setData(d);
+        setData(docs);
       } catch (e) {
         console.log(e);
       }
@@ -36,6 +36,19 @@ const ShowEvents = ({ events }) => {
       });
     }
   }, []);
+  const handleVenueChange = async (e) => {
+    let selectedVenue = e.target.value;
+    if (selectedVenue === 'AllVenue') {
+      selectedVenue = '';
+    }
+    setVenue(selectedVenue);
+    try {
+      const filterEvent = await getAllEvent(selectedVenue);
+      setData(filterEvent);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const isFull = data?.every((event) => event.seatAvailable === 0);
 
   return (
@@ -43,6 +56,15 @@ const ShowEvents = ({ events }) => {
       <Layout>
         {!data && <Loading />}
         <div className={styles.headerCardItem}>Events</div>
+        <div>
+          <select id="option-venue" value={venue} onChange={handleVenueChange}>
+            {venueOptions.map((e, i) => (
+              <option value={e} key={i}>
+                {e}
+              </option>
+            ))}
+          </select>
+        </div>
         {data?.length === 0 && (
           <div className={styles.isEventAvailable}>
             There are no shows or events scheduled for today. Please check back
@@ -55,6 +77,7 @@ const ShowEvents = ({ events }) => {
             booked, and there are no more available spots for reservations.😢
           </div>
         )}
+
         <div className={styles.wrapper}>
           <div className={styles.container}>
             {data &&

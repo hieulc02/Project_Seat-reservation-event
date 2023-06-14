@@ -14,9 +14,9 @@ export const createEvent = async (dataForm) => {
   return res.data;
 };
 
-export const getAllEvent = async () => {
-  const res = await Axios.get();
-
+export const getAllEvent = async (venue) => {
+  const url = venue ? `?venue=${venue}` : '';
+  const res = await Axios.get(url);
   return res.data.doc;
 };
 

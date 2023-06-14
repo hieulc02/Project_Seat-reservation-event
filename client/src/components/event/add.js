@@ -27,7 +27,7 @@ const AddEvent = ({ user }) => {
     col,
     ticketPrice,
   } = event;
-  const venueOptions = ['HCMC', 'HaNoi', 'Others'];
+  const venueOptions = ['AllVenue', 'HCMC', 'HaNoi', 'Others'];
 
   const handleChange = (name) => {
     return (e) => {
@@ -132,7 +132,6 @@ const AddEvent = ({ user }) => {
               value={venue}
               onChange={handleChange('venue')}
             >
-              <option>Select venue</option>
               {venueOptions.map((e, i) => (
                 <option value={e} key={i}>
                   {e}

@@ -57,24 +57,34 @@ const WaitingList = () => {
         {event.map((e, i) => (
           <React.Fragment key={i}>
             <div key={e._id}>
-              <div>{e.name}</div>
-              <div>{e.description}</div>
-              <div>{e.row * e.col}</div>
+              <div>
+                <label>Name: </label>
+                <div>{e.name}</div>
+              </div>
+              <div>
+                <label>Description: </label>
+                <div>{e.description}</div>
+              </div>
+              <div>
+                <label>Seat: </label> <div>{e.row * e.col}</div>
+              </div>
             </div>
-            <button
-              onClick={() => {
-                handleApproveClick(e._id, 'approved');
-              }}
-            >
-              Approve
-            </button>
-            <button
-              onClick={() => {
-                handleDenyClick(e._id);
-              }}
-            >
-              Deny
-            </button>
+            <div>
+              <button
+                onClick={() => {
+                  handleApproveClick(e._id, 'approved');
+                }}
+              >
+                Approve
+              </button>
+              <button
+                onClick={() => {
+                  handleDenyClick(e._id);
+                }}
+              >
+                Deny
+              </button>
+            </div>
           </React.Fragment>
         ))}
       </div>

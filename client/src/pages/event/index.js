@@ -11,8 +11,9 @@ import apiEndpoint from '../../apiConfig';
 const ShowEvents = ({ events }) => {
   const socket = useRef(null);
   const [data, setData] = useState(events);
+  const [filter, setFilter] = useState({});
   const venueOptions = ['AllVenue', 'HCMC', 'HaNoi', 'Others'];
-  const [venue, setVenue] = useState('');
+  const priceOptions = ['AllPrice', 'Free', 'Charge'];
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -36,14 +37,12 @@ const ShowEvents = ({ events }) => {
       });
     }
   }, []);
-  const handleVenueChange = async (e) => {
-    let selectedVenue = e.target.value;
-    if (selectedVenue === 'AllVenue') {
-      selectedVenue = '';
-    }
-    setVenue(selectedVenue);
+  const handleOptionChange = (name) => async (e) => {
+    let selectedOption = e.target.value;
+    const updatedFilter = { ...filter, [name]: selectedOption };
+    setFilter(updatedFilter);
     try {
-      const filterEvent = await getAllEvent(selectedVenue);
+      const filterEvent = await getAllEvent(updatedFilter);
       setData(filterEvent);
     } catch (e) {
       console.log(e);
@@ -56,14 +55,37 @@ const ShowEvents = ({ events }) => {
       <Layout>
         {!data && <Loading />}
         <div className={styles.headerCardItem}>Events</div>
-        <div>
-          <select id="option-venue" value={venue} onChange={handleVenueChange}>
-            {venueOptions.map((e, i) => (
-              <option value={e} key={i}>
-                {e}
-              </option>
-            ))}
-          </select>
+        <div className={styles.optionContainer}>
+          <div className={styles.optionWrapper}>
+            <div className={styles.option}>
+              <select
+                id="option-venue"
+                value={filter?.venue}
+                className={styles.select}
+                onChange={handleOptionChange('venue')}
+              >
+                {venueOptions.map((e, i) => (
+                  <option value={e} key={i}>
+                    {e}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className={styles.option}>
+              <select
+                id="option-price"
+                value={filter?.price}
+                className={styles.select}
+                onChange={handleOptionChange('price')}
+              >
+                {priceOptions.map((e, i) => (
+                  <option value={e} key={i}>
+                    {e}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
         {data?.length === 0 && (
           <div className={styles.isEventAvailable}>

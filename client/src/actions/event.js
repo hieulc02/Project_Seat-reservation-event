@@ -14,8 +14,22 @@ export const createEvent = async (dataForm) => {
   return res.data;
 };
 
-export const getAllEvent = async (venue) => {
-  const url = venue ? `?venue=${venue}` : '';
+export const getAllEvent = async (query = {}) => {
+  const { price = 'AllPrice', venue = 'AllVenue' } = query;
+  const sign = price === 'Charge' ? 'gt' : price === 'Free' ? 'lte' : 'gte';
+
+  if (price === 'AllPrice' && venue === 'AllVenue') {
+    query = null;
+  }
+  const queryParams = new URLSearchParams();
+  if (query) {
+    queryParams.set(`ticketPrice[${sign}]`, '0');
+    venue !== 'AllVenue' && queryParams.set('venue', encodeURIComponent(venue));
+  }
+
+  const queryString = queryParams.toString();
+  const url = queryString ? `?${queryString}` : '';
+
   const res = await Axios.get(url);
   return res.data.doc;
 };

@@ -27,7 +27,7 @@ const AddEvent = ({ user }) => {
     col,
     ticketPrice,
   } = event;
-  const venueOptions = ['AllVenue', 'HCMC', 'HaNoi', 'Others'];
+  const venueOptions = ['HCMC', 'HaNoi', 'Others'];
 
   const handleChange = (name) => {
     return (e) => {
@@ -85,19 +85,24 @@ const AddEvent = ({ user }) => {
     <>
       <div className={styles.addContainer}>
         <div className={styles.addWrapper}>
-          <div>
-            <input type="file" id="image" onChange={handleImageChange} />
+          <div className={styles.main}>
+            <input
+              type="file"
+              id="image"
+              className={styles.input}
+              onChange={handleImageChange}
+            />
             {previewSource && (
               <img
                 src={previewSource}
                 alt="event-picture"
-                style={{ height: '20rem' }}
+                style={{ height: '15rem' }}
               />
             )}
           </div>
           <div className={styles.main}>
             <label htmlFor="name" className={styles.label}>
-              Event Name
+              Event Name:
             </label>
             <input
               type="text"
@@ -110,14 +115,14 @@ const AddEvent = ({ user }) => {
               minLength="5"
             />
           </div>
-          <div>
+          <div className={styles.main}>
             <label htmlFor="description" className={styles.label}>
-              Description
+              Description:
             </label>
             <textarea
               type="text"
               id="description"
-              className={styles.input}
+              className={styles.descriptionText}
               value={description}
               onChange={handleChange('description')}
               placeholder="Description"
@@ -125,11 +130,14 @@ const AddEvent = ({ user }) => {
               minLength="5"
             />
           </div>
-          <div>
-            <label htmlFor="option-venue">Venue: </label>
+          <div className={styles.main}>
+            <label htmlFor="option-venue" className={styles.label}>
+              Venue:{' '}
+            </label>
             <select
               id="option-venue"
               value={venue}
+              className={styles.input}
               onChange={handleChange('venue')}
             >
               {venueOptions.map((e, i) => (
@@ -139,7 +147,7 @@ const AddEvent = ({ user }) => {
               ))}
             </select>
           </div>
-          <div>
+          <div className={styles.main}>
             <label htmlFor="startDate" className={styles.label}>
               Start date:
             </label>
@@ -151,7 +159,7 @@ const AddEvent = ({ user }) => {
               onChange={handleChange('dateStart')}
             />
           </div>
-          <div>
+          <div className={styles.main}>
             <label htmlFor="endDate" className={styles.label}>
               End date:
             </label>
@@ -163,9 +171,9 @@ const AddEvent = ({ user }) => {
               onChange={handleChange('dateEnd')}
             />
           </div>
-          <div>
+          <div className={styles.main}>
             <label htmlFor="ticketPrice" className={styles.label}>
-              Ticket Price
+              Ticket Price:
             </label>
             <input
               type="text"
@@ -176,9 +184,9 @@ const AddEvent = ({ user }) => {
               placeholder="Ticket price"
             />
           </div>
-          <div>
+          <div className={styles.main}>
             <label htmlFor="row" className={styles.label}>
-              Row Seats
+              Row Seats:
             </label>
             <input
               type="text"
@@ -189,9 +197,9 @@ const AddEvent = ({ user }) => {
               placeholder="Row Seats"
             />
           </div>
-          <div>
+          <div className={styles.main}>
             <label htmlFor="col" className={styles.label}>
-              Column Seats
+              Column Seats:
             </label>
             <input
               type="text"

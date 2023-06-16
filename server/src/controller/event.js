@@ -1,5 +1,6 @@
 const Reservation = require('../models/reservation');
 const Event = require('../models/event');
+const User = require('../models/user');
 const { Seat } = require('../models/seat');
 const factory = require('./factory');
 const catchAsync = require('../utils/catchAsync');
@@ -10,14 +11,17 @@ exports.updateEvent = factory.updateOne(Event);
 
 exports.deleteEventWithSeat = catchAsync(async (req, res, next) => {
   const { id } = req.params;
+  const userId = req.headers['x-user-id'];
+
   const deleteEventPromise = Event.findByIdAndDelete(id);
   const deleteSeatPromise = Seat.deleteSeatEvent(id);
   const deleteReservationPromise = Reservation.deleteReservationEvent(id);
-
+  const deleteEventUserPromise = User.deleteEvent(id, userId);
   await Promise.all([
     deleteEventPromise,
     deleteSeatPromise,
     deleteReservationPromise,
+    deleteEventUserPromise,
   ]);
   res.status(204).json({
     status: 'success',
@@ -27,7 +31,7 @@ exports.deleteEventWithSeat = catchAsync(async (req, res, next) => {
 exports.createEventWithSeat = catchAsync(async (req, res, next) => {
   const data = JSON.parse(req.body.data);
   const user = JSON.parse(req.body.user);
-  const event = new Event({ ...data, image: req.body.image });
+  const event = new Event({ ...data, user: user, image: req.body.image });
   const rows = event.row;
   const col = event.col;
 
@@ -61,7 +65,7 @@ exports.createEventWithSeat = catchAsync(async (req, res, next) => {
   event.seats = createdSeats;
   event.seatAvailable = rows * col;
   await event.save();
-
+  await User.updateEvent(user._id, event);
   res.status(201).json({
     status: 'Event created successfully',
   });

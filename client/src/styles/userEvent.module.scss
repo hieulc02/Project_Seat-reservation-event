@@ -1,48 +1,50 @@
 .container {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   flex-direction: column;
-  margin-top: 1rem;
   gap: 1rem;
-  width: 100%;
+  margin-top: 1rem;
   font-family: Arial, Helvetica, sans-serif;
-  .waitingList {
+  .user {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.395);
+    border: 2px solid #868e96;
+    width: 50rem;
+    .labelUser {
+      font-weight: bold;
+      font-size: 1.5rem;
+      margin-right: 1rem;
+    }
+    .username {
+      font-size: 2rem;
+    }
+  }
+  .wrapper {
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
     width: 50rem;
     box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.395);
     border: 2px solid #868e96;
-    .header {
-      margin-top: 0.5rem;
-      margin-bottom: 1rem;
-      .label {
-        font-weight: bold;
-      }
-      .ref {
-        padding: 0.2rem;
-        margin-left: 1rem;
-        border: 3px solid #868e96;
-        width: fit-content;
-        a {
-          text-decoration: none;
-          font-size: 1.2rem;
-          color: #343a40;
-        }
-      }
+    .image {
+      padding: 0.5rem;
     }
     .box {
       .label {
         font-weight: bold;
       }
       .content {
-        border: 2px solid #868e96;
-        border-radius: 2px;
+        margin-left: 0.5rem;
       }
     }
     .button {
       display: flex;
       justify-content: center;
       gap: 8rem;
-      .approve {
+      .edit {
         border: none;
         background: #339af0;
         color: #f1f3f5;
@@ -59,7 +61,7 @@
           color: #ece1e1;
         }
       }
-      .deny {
+      .delete {
         border: none;
         width: 8rem;
         background: #fa5252;

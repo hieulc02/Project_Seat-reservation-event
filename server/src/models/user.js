@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 //const jwt = require('jsonwebtoken');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
+const { updateOne } = require('./event');
 const { Schema } = mongoose;
 
 const userSchema = new Schema(
@@ -41,6 +42,13 @@ const userSchema = new Schema(
         message: 'Password are not the same',
       },
     },
+    event: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Event',
+        require: true,
+      },
+    ],
     image: {
       type: String,
     },
@@ -55,6 +63,33 @@ userSchema.methods.correctPassword = async function (
   userPassword
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+userSchema.statics.updateEvent = async function (id, newEvent) {
+  try {
+    await this.updateOne(
+      {
+        _id: { $eq: id },
+      },
+      { $push: { event: newEvent } }
+    );
+  } catch (e) {
+    throw new Error('Update event fail');
+  }
+};
+userSchema.statics.deleteEvent = async function (eventId, userId) {
+  try {
+    await this.updateOne(
+      {
+        _id: { $eq: userId },
+      },
+      {
+        $pull: { event: eventId },
+      }
+    );
+  } catch (e) {
+    throw new Error('Delete event fail');
+  }
 };
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();

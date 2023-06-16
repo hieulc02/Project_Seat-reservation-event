@@ -19,8 +19,8 @@ const eventSchema = new Schema({
   },
   venue: {
     type: String,
-    enum: ['AllVenue', 'HCMC', 'HaNoi', 'Others'],
-    default: 'AllVenue',
+    enum: ['HCMC', 'HaNoi', 'Others'],
+    default: 'HCMC',
     require: true,
   },
   dateStart: {
@@ -60,6 +60,11 @@ const eventSchema = new Schema({
     type: Date,
     default: Date.now(),
   },
+  user: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    require: true,
+  },
   image: String,
 });
 
@@ -67,7 +72,7 @@ eventSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'seats',
     model: 'Seat',
-  });
+  }).populate('user');
   next();
 });
 

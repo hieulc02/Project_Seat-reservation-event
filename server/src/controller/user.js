@@ -29,3 +29,11 @@ exports.getAllUsers = factory.getAll(User);
 
 exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);
+
+exports.getEventUser = catchAsync(async (req, res, next) => {
+  const { username } = req.params;
+  const user = await User.findOne({ name: username }).populate('event');
+  res.status(200).json({
+    user,
+  });
+});

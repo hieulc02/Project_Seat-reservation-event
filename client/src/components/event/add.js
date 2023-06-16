@@ -4,10 +4,12 @@ import styles from '../../styles/event.module.scss';
 import { toast } from 'react-toastify';
 
 const AddEvent = ({ user }) => {
+  const venueOptions = ['HCMC', 'HaNoi', 'Others'];
+
   const [event, setEvent] = useState({
     name: '',
     description: '',
-    venue: '',
+    venue: venueOptions[0],
     dateStart: '',
     dateEnd: '',
     row: '',
@@ -27,7 +29,6 @@ const AddEvent = ({ user }) => {
     col,
     ticketPrice,
   } = event;
-  const venueOptions = ['HCMC', 'HaNoi', 'Others'];
 
   const handleChange = (name) => {
     return (e) => {
@@ -37,6 +38,7 @@ const AddEvent = ({ user }) => {
   const handleSubmit = async () => {
     if (!selectedImage) return;
     const formData = new FormData();
+    console.log(event);
     formData.append('file', selectedImage);
     formData.append('data', JSON.stringify(event));
     formData.append('user', JSON.stringify(user));

@@ -49,12 +49,19 @@ export const updateEventStatus = async (id, status) => {
   const res = await Axios.put(`/${id}`, { status });
   return res.data;
 };
-export const deleteEvent = async (id) => {
-  const res = await Axios.delete(`/${id}`);
+export const deleteEvent = async (id, userId) => {
+  const res = await Axios.delete(`/${id}`, {
+    headers: { 'X-User-Id': userId },
+  });
   return res.data;
 };
 
 export const updateEvent = async (id, updatedEvent) => {
   const res = await Axios.patch(`/${id}`, updatedEvent);
+  return res.data;
+};
+
+export const getEventUser = async (username) => {
+  const res = await Axios.get(`/user/${username}`);
   return res.data;
 };

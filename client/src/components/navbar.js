@@ -6,19 +6,23 @@ const Navbar = () => {
     <>
       <div className={styles.container}>
         <div className={styles.box}>
-          <div className={styles.home}>
-            <Link href="/">Home</Link>
+          <div className={styles.logo}>
+            <Link href="/">
+              <img
+                src="https://res.cloudinary.com/dbaoiiirg/image/upload/v1687157967/event/tihhuuje7oigzv6mboly.webp"
+                alt="event picture"
+                style={{
+                  objectFit: 'cover',
+                  objectPosition: 'center',
+                  width: '100%',
+                  borderRadius: '10px',
+                }}
+              />
+            </Link>
           </div>
-          <div className={styles.event}>
-            <Link href="/event">Event</Link>
-          </div>
-
-          <div className={styles.reservation}>
-            <Link href="/reservation">Reservation</Link>
-          </div>
-          <div className={styles.reservation}>
-            <Link href="/event/add-event">Create Event</Link>
-          </div>
+          <Link href="/event/add-event">
+            <div className={styles.createEvent}>Create Event</div>
+          </Link>
         </div>
         <DropDownMenu />
       </div>

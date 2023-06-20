@@ -8,6 +8,7 @@ import React from 'react';
 import moment from 'moment';
 import io from 'socket.io-client';
 import apiEndpoint from '../../apiConfig';
+import { checkAuthentication } from '../../auth';
 const ShowEvents = ({ events }) => {
   const socket = useRef(null);
   const [data, setData] = useState(events);
@@ -99,15 +100,13 @@ const ShowEvents = ({ events }) => {
             booked, and there are no more available spots for reservations.😢
           </div>
         )}
-
         <div className={styles.wrapper}>
           <div className={styles.container}>
             {data &&
               data.map((event, i) => (
                 <React.Fragment key={i}>
                   {event.seatAvailable > 0 &&
-                    (event.status === 'approved' ||
-                      event?.tempStatus === 'approved') && (
+                    (event.isApproved || event?.tempStatus === 'approved') && (
                       <div key={event._id}>
                         <div className={styles.eventCard}>
                           <Link
@@ -122,6 +121,7 @@ const ShowEvents = ({ events }) => {
                                   objectFit: 'cover',
                                   objectPosition: 'center',
                                   width: '100%',
+                                  borderRadius: '10px',
                                 }}
                               />
                             </div>
@@ -156,12 +156,25 @@ const ShowEvents = ({ events }) => {
     </>
   );
 };
-export const getServerSideProps = async () => {
-  const events = await getAllEvent();
-  return {
-    props: {
-      events,
-    },
-  };
+export const getServerSideProps = async ({ req }) => {
+  try {
+    const authenticationCheck = await checkAuthentication(req);
+    if ('redirect' in authenticationCheck) {
+      return authenticationCheck;
+    }
+    const events = await getAllEvent();
+    return {
+      props: {
+        events,
+      },
+    };
+  } catch (e) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+  }
 };
 export default ShowEvents;

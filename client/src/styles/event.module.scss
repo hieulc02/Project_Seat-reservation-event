@@ -7,11 +7,11 @@
   font-weight: bold;
   font-family: Arial, Helvetica, sans-serif;
 }
-
 .headerCardItem {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 1rem;
   font-size: 2rem;
   font-weight: bold;
   font-family: Arial, Helvetica, sans-serif;
@@ -27,8 +27,9 @@
     justify-content: center;
     gap: 0.1rem;
     width: 80rem;
-    border: 5px solid #868e96;
-    border-radius: 5px;
+    background: #f8f9fa;
+    box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.395);
+    border-radius: 10px;
     .option {
       padding: 0.5rem;
       .select {
@@ -58,6 +59,8 @@
       align-items: center;
       flex-direction: column;
       height: 100%;
+      background: #f8f9fa;
+      border-radius: 10px;
       box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.395);
       padding: 5px;
       font-family: Arial, Helvetica, sans-serif;
@@ -124,8 +127,11 @@
       height: 3rem;
       font-size: 1.5rem;
       font-weight: bold;
-      &:hover {
+      &:hover,
+      &:focus {
         cursor: pointer;
+        background: #e03131;
+        color: #ece1e1;
       }
     }
   }
@@ -137,6 +143,45 @@
       border: 1px solid black;
       text-align: center;
       font-size: 2rem;
+      .button {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        .update {
+          border: none;
+          background: #339af0;
+          color: #f1f3f5;
+          width: 8rem;
+          border-radius: 0.3rem;
+          font-size: 1.5rem;
+          font-weight: bolder;
+          padding: 0.8rem;
+          cursor: pointer;
+          outline: none;
+          &:hover,
+          &:focus {
+            background: #2979c0;
+            color: #ece1e1;
+          }
+        }
+        .delete {
+          border: none;
+          width: 8rem;
+          background: #fa5252;
+          color: #f1f3f5;
+          border-radius: 0.3rem;
+          font-size: 1.5rem;
+          font-weight: bolder;
+          padding: 0.8rem;
+          cursor: pointer;
+          outline: none;
+          &:hover,
+          &:focus {
+            background: #e03131;
+            color: #ece1e1;
+          }
+        }
+      }
     }
   }
 }
@@ -144,7 +189,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
   .addWrapper {
     display: flex;
     justify-content: flex-start;
@@ -155,7 +199,9 @@
     gap: 1rem;
     height: max-content;
     width: 50%;
+    border-radius: 10px;
     box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.395);
+    background: #f8f9fa;
     .main {
       display: flex;
       justify-content: flex-start;

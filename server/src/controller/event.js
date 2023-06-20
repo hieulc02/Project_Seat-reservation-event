@@ -60,7 +60,7 @@ exports.createEventWithSeat = catchAsync(async (req, res, next) => {
   }
   const createdSeats = await Promise.all(seats);
   if (user.role === 'admin') {
-    event.status = 'approved';
+    event.isApproved = true;
   }
   event.seats = createdSeats;
   event.seatAvailable = rows * col;
@@ -72,18 +72,17 @@ exports.createEventWithSeat = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllEventsPending = catchAsync(async (req, res, next) => {
-  const event = await Event.find({ status: 'pending' });
+  const event = await Event.find({ isApproved: false });
 
   res.status(200).json(event);
 });
 
 exports.updateEventStatus = catchAsync(async (req, res, next) => {
   const eventId = req.params.id;
-  const { status } = req.body;
-
+  const { status } = req.body; // status : true
   const event = await Event.findByIdAndUpdate(
     eventId,
-    { status },
+    { isApproved: status },
     { new: true }
   );
 

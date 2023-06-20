@@ -46,7 +46,7 @@ export const getAllEventsPending = async () => {
 };
 
 export const updateEventStatus = async (id, status) => {
-  const res = await Axios.put(`/${id}`, { status });
+  const res = await Axios.patch(`/status/${id}`, { status });
   return res.data;
 };
 export const deleteEvent = async (id, userId) => {

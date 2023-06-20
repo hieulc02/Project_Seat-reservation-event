@@ -1,32 +1,6 @@
-import Head from 'next/head';
-import React from 'react';
-import styles from '../styles/home.module.scss';
-import Layout from '../components/layout';
 import axios from 'axios';
-import apiEndpoint from '../apiConfig';
-import Sidebar from '../components/sidebar';
-
-const Home = ({ user }) => {
-  return (
-    <Layout>
-      <div className={styles.container}>
-        <Head>
-          <title>Event Seat Reservation</title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-
-        <main>
-          <div className={styles.main}>
-            <div className={styles.carousel}></div>
-            <Sidebar />
-          </div>
-        </main>
-      </div>
-    </Layout>
-  );
-};
-
-export const getServerSideProps = async ({ req }) => {
+import apiEndpoint from './apiConfig';
+export const checkAuthentication = async (req) => {
   let jwtString = null;
   const keyValuePairs = req.headers?.cookie?.split('; ');
   if (keyValuePairs) {
@@ -44,6 +18,7 @@ export const getServerSideProps = async ({ req }) => {
       },
     };
   }
+
   try {
     const res = await axios.get(`${apiEndpoint}/api/users/me`, {
       withCredentials: true,
@@ -59,9 +34,7 @@ export const getServerSideProps = async ({ req }) => {
       };
     }
     return {
-      props: {
-        user,
-      },
+      user,
     };
   } catch (e) {
     return {
@@ -72,5 +45,3 @@ export const getServerSideProps = async ({ req }) => {
     };
   }
 };
-
-export default Home;

@@ -7,6 +7,16 @@
   gap: 1rem;
   width: 100%;
   font-family: Arial, Helvetica, sans-serif;
+  .header {
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+  .noEvent {
+    margin-top: 25rem;
+    width: 100%;
+    text-align: center;
+    font-size: 3rem;
+  }
   .waitingList {
     width: 50rem;
     box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.395);
@@ -22,12 +32,19 @@
         margin-left: 1rem;
         border: 3px solid #868e96;
         width: fit-content;
+        &:hover,
+        &:focus {
+          background: #e03131;
+        }
         a {
           text-decoration: none;
           font-size: 1.2rem;
           color: #343a40;
         }
       }
+    }
+    .image {
+      padding: 0.5rem;
     }
     .box {
       .label {

@@ -2,11 +2,9 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const eventSchema = new Schema({
-  status: {
-    type: String,
-    enum: ['pending', 'approved'],
-    default: 'pending',
-    required: true,
+  isApproved: {
+    type: Boolean,
+    default: false,
   },
   name: {
     type: String,
@@ -90,6 +88,7 @@ eventSchema.statics.seatUpdated = async function (totalSeatReserved, eventId) {
     throw new Error('Invalid seat updated');
   }
 };
+
 const Event = mongoose.model('Event', eventSchema);
 
 module.exports = Event;

@@ -1,0 +1,38 @@
+.container {
+  margin-top: 1rem;
+  width: 20rem;
+  height: 68rem;
+  display: flex;
+  justify-content: flex-start;
+  .wrapper {
+    width: 100%;
+    ul {
+      padding: 0;
+      margin: 0;
+      padding-left: 0;
+      height: max-content;
+      list-style-type: none;
+      width: 100%;
+      li {
+        padding: 1rem;
+        a {
+          text-decoration: none;
+          color: #212529;
+          font-size: 1.5rem;
+        }
+        .box {
+          display: flex;
+          justify-content: flex-start;
+          align-items: center;
+          gap: 1rem;
+        }
+        &:focus {
+          color: #212529;
+        }
+        &:hover {
+          background: #f8f9fa;
+        }
+      }
+    }
+  }
+}

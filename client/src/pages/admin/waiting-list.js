@@ -10,16 +10,21 @@ import io from 'socket.io-client';
 import apiEndpoint from '../../apiConfig';
 import Layout from '../../components/layout';
 import Link from 'next/link';
+import { checkAuthentication } from '../../auth';
+import Loading from '../../components/loading';
 
 const WaitingList = () => {
   const socket = useRef(null);
   const [event, setEvent] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const docs = await getAllEventsPending();
         const d = docs.map((doc) => doc);
         setEvent(d);
+        setIsLoading(false);
       } catch (e) {
         console.log(e);
       }
@@ -53,7 +58,12 @@ const WaitingList = () => {
   };
   return (
     <Layout>
+      {isLoading && <Loading />}
       <div className={styles.container}>
+        <div className={styles.header}>Waiting list</div>
+        {!isLoading && event?.length === 0 && (
+          <div className={styles.noEvent}>No event pending 😢</div>
+        )}
         {event.map((e, i) => (
           <React.Fragment key={i}>
             <div key={e._id} className={styles.waitingList}>
@@ -62,6 +72,17 @@ const WaitingList = () => {
                 <div className={styles.ref}>
                   <Link href={`/event/user/${e.user.name}`}>{e.user.name}</Link>
                 </div>
+              </div>
+              <div className={styles.image}>
+                <img
+                  src={e.image}
+                  alt="event-image"
+                  style={{
+                    objectFit: 'cover',
+                    objectPosition: 'center',
+                    width: '100%',
+                  }}
+                />
               </div>
               <div className={styles.box}>
                 <label className={styles.label}>Name: </label>
@@ -86,7 +107,7 @@ const WaitingList = () => {
               <div className={styles.button}>
                 <button
                   onClick={() => {
-                    handleApproveClick(e._id, 'approved');
+                    handleApproveClick(e._id, true);
                   }}
                   className={styles.approve}
                 >
@@ -108,5 +129,25 @@ const WaitingList = () => {
     </Layout>
   );
 };
+export const getServerSideProps = async ({ req }) => {
+  const authenticationCheck = await checkAuthentication(req);
 
+  if ('redirect' in authenticationCheck) {
+    return authenticationCheck;
+  }
+  const user = authenticationCheck?.user;
+  if (user.role !== 'admin') {
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {
+      user,
+    },
+  };
+};
 export default WaitingList;

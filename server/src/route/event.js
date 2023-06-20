@@ -22,19 +22,13 @@ eventRoute.get('/pending', eventController.getAllEventsPending);
 eventRoute
   .route('/:id')
   .get(eventController.getEvent)
+  .patch(authController.protect, eventController.updateEvent)
+  .delete(authController.protect, eventController.deleteEventWithSeat);
+eventRoute
+  .route('/status/:id')
   .patch(
     authController.protect,
     authController.restrictTo('admin'),
-    eventController.updateEvent
-  )
-  .put(
-    authController.protect,
-    authController.restrictTo('admin'),
     eventController.updateEventStatus
-  )
-  .delete(
-    authController.protect,
-    authController.restrictTo('admin'),
-    eventController.deleteEventWithSeat
   );
 module.exports = eventRoute;

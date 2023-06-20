@@ -6,6 +6,7 @@ import styles from '../../styles/reservation.module.scss';
 import { getReservationByUser } from '../../actions/reservation';
 import Layout from '../../components/layout';
 import Loading from '../../components/loading';
+import { checkAuthentication } from '../../auth';
 
 const Reservation = ({ user }) => {
   const [userReservation, setUserReservation] = useState([]);
@@ -85,24 +86,14 @@ const Reservation = ({ user }) => {
 };
 
 export const getServerSideProps = async ({ req }) => {
-  let jwtString = null;
-  const keyValuePairs = req.headers?.cookie?.split('; ');
-  if (keyValuePairs) {
-    for (const pair of keyValuePairs) {
-      if (pair.startsWith('jwt=')) {
-        jwtString = pair.substring(4);
-        break;
-      }
-    }
+  const authenticationCheck = await checkAuthentication(req);
+
+  if ('redirect' in authenticationCheck) {
+    return authenticationCheck;
   }
-  const res = await axios.get(`${apiEndpoint}/api/users/me`, {
-    withCredentials: true,
-    headers: { Authorization: `Bearer ${jwtString}` },
-  });
-  const user = res.data.doc;
   return {
     props: {
-      user,
+      user: authenticationCheck.user,
     },
   };
 };

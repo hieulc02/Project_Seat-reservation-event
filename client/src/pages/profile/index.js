@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import Layout from '../../components/layout';
 import { updateMe } from '../../actions/authentication';
-import axios from 'axios';
-import apiEndpoint from '../../apiConfig';
 import { toast } from 'react-toastify';
+import styles from '../../styles/profile.module.scss';
+import { checkAuthentication } from '../../auth';
 
 const Profile = ({ user }) => {
   const [updateUser, setUpdateUser] = useState(null);
@@ -26,29 +26,55 @@ const Profile = ({ user }) => {
   };
   return (
     <Layout>
-      <div>
+      <div className={styles.container}>
         {editMode ? (
-          <div>
-            <input
-              value={updateUser?.name}
-              onChange={(e) =>
-                setUpdateUser({ ...updateUser, name: e.target.value })
-              }
-            />
-            <input
-              value={updateUser?.email}
-              onChange={(e) =>
-                setUpdateUser({ ...updateUser, email: e.target.value })
-              }
-            />
-
-            <button onClick={() => handleSubmit(updateUser)}>Update</button>
+          <div className={styles.wrapper}>
+            <div className={styles.box}>
+              <label className={styles.label}>Name: </label>
+              <div className={styles.content}>
+                <input
+                  value={updateUser?.name}
+                  onChange={(e) =>
+                    setUpdateUser({ ...updateUser, name: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+            <div className={styles.box}>
+              <label className={styles.label}>Email: </label>
+              <div className={styles.content}>
+                <input
+                  value={updateUser?.email}
+                  onChange={(e) =>
+                    setUpdateUser({ ...updateUser, email: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+            <div className={styles.button}>
+              <button
+                className={styles.update}
+                onClick={() => handleSubmit(updateUser)}
+              >
+                Update
+              </button>
+            </div>
           </div>
         ) : (
-          <div>
-            <div>{updateUser?.name}</div>
-            <div>{updateUser?.email}</div>
-            <button onClick={() => handleEdit()}>Edit</button>
+          <div className={styles.wrapper}>
+            <div className={styles.box}>
+              <label className={styles.label}>Name:</label>
+              <div className={styles.content}>{updateUser?.name}</div>
+            </div>
+            <div className={styles.box}>
+              <div className={styles.label}>Email: </div>
+              <div className={styles.content}>{updateUser?.email}</div>
+            </div>
+            <div className={styles.button}>
+              <button className={styles.update} onClick={() => handleEdit()}>
+                Edit
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -57,24 +83,14 @@ const Profile = ({ user }) => {
 };
 
 export const getServerSideProps = async ({ req }) => {
-  let jwtString = null;
-  const keyValuePairs = req.headers?.cookie?.split('; ');
-  if (keyValuePairs) {
-    for (const pair of keyValuePairs) {
-      if (pair.startsWith('jwt=')) {
-        jwtString = pair.substring(4);
-        break;
-      }
-    }
+  const authenticationCheck = await checkAuthentication(req);
+
+  if ('redirect' in authenticationCheck) {
+    return authenticationCheck;
   }
-  const res = await axios.get(`${apiEndpoint}/api/users/me`, {
-    withCredentials: true,
-    headers: { Authorization: `Bearer ${jwtString}` },
-  });
-  const user = res.data.doc;
   return {
     props: {
-      user,
+      user: authenticationCheck.user,
     },
   };
 };

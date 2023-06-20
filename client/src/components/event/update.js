@@ -5,11 +5,13 @@ import styles from '../../styles/event.module.scss';
 import SearchBar from '../search';
 import Router from 'next/router';
 const UpdateEvent = () => {
+  const venueOptions = ['HCMC', 'HaNoi', 'Others'];
   const [editMode, setEditMode] = useState(false);
   const [event, setEvent] = useState([]);
   const [updatedEvent, setUpdatedEvent] = useState(null);
   const [editEventId, setEditEventId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+
   useEffect(() => {
     const fetchEvent = async () => {
       try {
@@ -98,7 +100,7 @@ const UpdateEvent = () => {
             {filterEvent?.map((e, i) =>
               editMode && editEventId === e?._id ? (
                 <tr key={i}>
-                  <td>{e.status}</td>
+                  <td>{e.isApproved ? 'Approved' : 'Pending'}</td>
                   <td>
                     <img
                       src={e.image}
@@ -129,6 +131,23 @@ const UpdateEvent = () => {
                         })
                       }
                     />
+                  </td>
+                  <td>
+                    <select
+                      value={venueOptions[0]}
+                      onChange={(e) =>
+                        setUpdatedEvent({
+                          ...updatedEvent,
+                          venue: e.target.value,
+                        })
+                      }
+                    >
+                      {venueOptions.map((e, i) => (
+                        <option value={e} key={i}>
+                          {e}
+                        </option>
+                      ))}
+                    </select>
                   </td>
                   <td>
                     <input
@@ -170,17 +189,19 @@ const UpdateEvent = () => {
                   <td>{e.row}</td>
                   <td>{e.col}</td>
                   <td>
-                    <button
-                      className={styles.update}
-                      onClick={() => handleUpdateCLick(e._id, updatedEvent)}
-                    >
-                      Update
-                    </button>
+                    <div className={styles.button}>
+                      <button
+                        className={styles.update}
+                        onClick={() => handleUpdateCLick(e._id, updatedEvent)}
+                      >
+                        Update
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ) : (
                 <tr key={i}>
-                  <td>{e.status}</td>
+                  <td>{e.isApproved ? 'Approved' : 'Pending'}</td>
                   <td>
                     <img
                       src={e.image}
@@ -198,18 +219,20 @@ const UpdateEvent = () => {
                   <td>{e.row}</td>
                   <td>{e.col}</td>
                   <td>
-                    <button
-                      className={styles.update}
-                      onClick={() => handleEditClick(e._id)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className={styles.delete}
-                      onClick={() => handleDeleteClick(e._id)}
-                    >
-                      Delete
-                    </button>
+                    <div className={styles.button}>
+                      <button
+                        className={styles.update}
+                        onClick={() => handleEditClick(e._id)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className={styles.delete}
+                        onClick={() => handleDeleteClick(e._id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               )

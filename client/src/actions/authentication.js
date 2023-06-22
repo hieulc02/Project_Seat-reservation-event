@@ -28,7 +28,10 @@ export const updateMe = async (updateUser) => {
   );
   return res.data;
 };
-
+export const verifyEmail = async (query) => {
+  const res = await Axios.get(`/email/confirmation?code=${query}`);
+  return res.data;
+};
 export const getMe = async () => {
   const res = await Axios.get('me', {
     withCredentials: true,

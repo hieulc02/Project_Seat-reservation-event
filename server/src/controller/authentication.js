@@ -3,6 +3,8 @@ const User = require('../models/user');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const { promisify } = require('util');
+const Email = require('../utils/email');
+const bcrypt = require('bcrypt');
 
 const signToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -30,18 +32,41 @@ const createSendToken = (user, statusCode, req, res) => {
   });
 };
 
+const createConfirmCode = (userId) => {
+  const salt = bcrypt.genSaltSync(10);
+  const hashId = bcrypt.hashSync(userId, salt);
+  const confirmCode = hashId.slice(0, 30);
+  return confirmCode;
+};
+
 exports.signup = catchAsync(async (req, res, next) => {
-  const user = await User.findOne({
+  const existUser = await User.findOne({
     email: req.body.email,
   });
-  if (user) {
+  if (existUser) {
     return res.status(400).json({
       error: 'Email already exists',
     });
   }
-  const newUser = new User({ ...req.body, role: req.body.role });
-  await newUser.save();
-  createSendToken(newUser, 201, req, res);
+  const user = new User({ ...req.body, role: req.body.role });
+  const userId = user._id.toString();
+  const confirmCode = createConfirmCode(userId);
+  user.confirmCode = confirmCode;
+  await new Email(user).sendVerify();
+  await user.save();
+  createSendToken(user, 201, req, res);
+});
+
+exports.emailConfirm = catchAsync(async (req, res, next) => {
+  const confirmCode = req.query.code;
+  const user = await User.findOne({ confirmCode });
+  if (!user) {
+    res.status(404).json({ error: 'Invalid confirmation code' });
+  }
+  user.verified = true;
+  user.confirmCode = undefined;
+  await user.save();
+  res.status(200).json({ status: 'Email verification successful' });
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -62,7 +87,11 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));
   }
-
+  if (!user.verified) {
+    return next(
+      new AppError('Email not confirmed. Please verify your email!', 401)
+    );
+  }
   createSendToken(user, 200, req, res);
 });
 

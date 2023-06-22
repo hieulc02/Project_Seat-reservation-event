@@ -7,7 +7,7 @@ const userRoute = express.Router();
 userRoute.post('/signup', authController.signup);
 userRoute.post('/login', authController.login);
 userRoute.get('/logout', authController.logout);
-
+userRoute.get('/email/confirmation', authController.emailConfirm);
 userRoute.use(authController.protect);
 userRoute.get('/me', user.getMe, user.getUser);
 userRoute.patch('/updateMe', user.updateMe);

@@ -1,9 +1,6 @@
 const mongoose = require('mongoose');
-//const { use } = require('../app');
-//const jwt = require('jsonwebtoken');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
-const { updateOne } = require('./event');
 const { Schema } = mongoose;
 
 const userSchema = new Schema(
@@ -51,6 +48,17 @@ const userSchema = new Schema(
     ],
     image: {
       type: String,
+    },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
+    confirmCode: {
+      type: String,
+    },
+    registrationDate: {
+      type: Date,
+      default: Date.now,
     },
   },
   {

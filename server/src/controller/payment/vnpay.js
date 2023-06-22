@@ -1,10 +1,10 @@
 const moment = require('moment');
 const catchAsync = require('../../utils/catchAsync');
-const Transaction = require('../../models/transaction');
-const { createReservationWithSeat } = require('../reservation');
+const { createTransaction, verifyTransaction } = require('../transaction');
 exports.createPaymentUrl = catchAsync(async (req, res, next) => {
-  let date = new Date();
-  let createDate = moment(date).format('YYYYMMDDHHmmss');
+  const { selectedSeats, total, user, eventId, amount, date, venue } = req.body;
+  let time = new Date();
+  let createDate = moment(time).format('YYYYMMDDHHmmss');
   let ipAddr = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
   let config = require('../../utils/vnpay');
@@ -14,18 +14,7 @@ exports.createPaymentUrl = catchAsync(async (req, res, next) => {
   let vnpUrl = config.vnp_Url;
   let returnUrl = config.vnp_ReturnUrl;
 
-  let orderId = moment(date).format('DDHHmmss');
-  const order = new Transaction({
-    _id: Number(orderId),
-    selectedSeats: req.body.selectedSeats,
-    total: req.body.total,
-    user: req.body.user,
-    eventId: req.body.eventId,
-    amount: req.body.amount,
-    date: req.body.date,
-    venue: req.body.venue
-  });
-  let amount = req.body.amount;
+  let orderId = moment(time).format('DDHHmmss');
   let bankCode = req.body?.bankCode || '';
   let locale = req.body?.language || 'vn';
   let selectedSeat = req.body.selectedSeats;
@@ -58,8 +47,17 @@ exports.createPaymentUrl = catchAsync(async (req, res, next) => {
 
   vnp_Params['vnp_SecureHash'] = signed;
   vnpUrl += '?' + querystring.stringify(vnp_Params, { encode: false });
-  await order.save();
 
+  await createTransaction(
+    orderId,
+    selectedSeats,
+    total,
+    user,
+    eventId,
+    amount,
+    date,
+    venue
+  );
   res.status(200).json({ paymentUrl: vnpUrl });
 });
 exports.verifyPaymentUrl = catchAsync(async (req, res, next) => {
@@ -82,38 +80,15 @@ exports.verifyPaymentUrl = catchAsync(async (req, res, next) => {
 
   let signed = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
   if (secureHash === signed) {
-    const transaction = await Transaction.findById(id);
-    if (!transaction) {
-      return res.status(400).json({
-        type: 'vnpay',
-        code: '99',
-      });
-    }
-
-    const { selectedSeats, total, eventId, user, amount, date, venue} = transaction;
-    const reservation = await createReservationWithSeat(
-      date,
-      venue,
-      selectedSeats,
-      total,
-      eventId,
-      user
-    );
-    if (reservation) {
-      await Promise.all([
-        Transaction.updateTransactionVerify(id, user),
-        Transaction.deleteTransactionFail(user),
-      ]);
-    }
-
+    const { reservation, amount } = await verifyTransaction(id);
     res.status(200).json({
-      type: 'vnpay',
+      type: 'vnPay',
       code: vnp_Params['vnp_ResponseCode'],
       data: reservation,
       amount,
     });
   } else {
-    res.status(200).json({ type: 'vnpay', code: '97' });
+    res.status(200).json({ type: 'vnPay', code: '97' });
   }
 });
 

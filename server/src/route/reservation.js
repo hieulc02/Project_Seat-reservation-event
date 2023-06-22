@@ -1,7 +1,7 @@
 const express = require('express');
 const resController = require('../controller/reservation');
-const router = express.Router();
 const authController = require('../controller/authentication');
+const router = express.Router();
 
 router.use(authController.protect);
 router.get('/', resController.getAllReservation);

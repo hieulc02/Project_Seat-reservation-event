@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcrypt');
+const AppError = require('../utils/appError');
 const { Schema } = mongoose;
 
 const userSchema = new Schema(
@@ -82,7 +83,7 @@ userSchema.statics.updateEvent = async function (id, newEvent) {
       { $push: { event: newEvent } }
     );
   } catch (e) {
-    throw new Error('Update event fail');
+    throw new AppError('Update event fail', 400);
   }
 };
 userSchema.statics.deleteEvent = async function (eventId, userId) {
@@ -96,7 +97,7 @@ userSchema.statics.deleteEvent = async function (eventId, userId) {
       }
     );
   } catch (e) {
-    throw new Error('Delete event fail');
+    throw new AppError('Delete event fail', 400);
   }
 };
 userSchema.pre('save', async function (next) {

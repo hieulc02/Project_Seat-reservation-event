@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const AppError = require('../utils/appError');
 
 const { Schema } = mongoose;
 
@@ -65,7 +66,7 @@ seatSchema.statics.reservedSeats = async function (reservedSeats, eventId) {
       }
     );
   } catch (e) {
-    throw new Error('Seat reservation fail!');
+    throw new AppError('Seat reservation fail!', 400);
   }
 };
 
@@ -78,7 +79,7 @@ seatSchema.statics.checkExistSeats = async function (reservedSeats, eventId) {
     });
     return existingSeats;
   } catch (e) {
-    throw new Error('Check seat fail');
+    throw new AppError('Fail to check seat', 400);
   }
 };
 seatSchema.statics.deleteSeatEvent = async function (id) {
@@ -88,7 +89,7 @@ seatSchema.statics.deleteSeatEvent = async function (id) {
     });
     mapOccupied.delete(key);
   } catch (e) {
-    throw new Error('Fail to delete seat');
+    throw new AppError('Fail to delete seat', 400);
   }
 };
 const Seat = mongoose.model('Seat', seatSchema);

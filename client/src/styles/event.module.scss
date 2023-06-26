@@ -21,22 +21,32 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: Arial, Helvetica, sans-serif;
+
   .optionWrapper {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 0.1rem;
-    width: 80rem;
+    width: 78rem;
     background: #f8f9fa;
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.395);
     border-radius: 10px;
+    padding: 0.2rem 1rem;
     .option {
-      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.2rem;
+      flex-grow: 2;
       .select {
-        width: 39rem;
+        font-size: 1.5rem;
+        width: 100%;
+        flex-grow: 1;
         height: 3rem;
-        font-size: 1rem;
-        font-family: Arial, Helvetica, sans-serif;
+        border: none;
+        background: #f8f9fa;
+        outline: none;
       }
     }
   }
@@ -182,6 +192,9 @@
           }
         }
       }
+    }
+    th {
+      background: yellow;
     }
   }
 }

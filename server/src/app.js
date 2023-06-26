@@ -1,5 +1,6 @@
 const morgan = require('morgan');
 const express = require('express');
+const cronJob = require('./utils/cronJob');
 const app = express();
 const dotenv = require('dotenv');
 const cors = require('cors');
@@ -51,6 +52,7 @@ app.use((req, res, next) => {
   next();
 });
 initSeat(io);
+cronJob.start();
 
 const setToRoom = new Set();
 io.on('connection', (socket) => {
@@ -114,4 +116,5 @@ app.use((err, req, res, next) => {
     error: err.message,
   });
 });
+
 module.exports = server;

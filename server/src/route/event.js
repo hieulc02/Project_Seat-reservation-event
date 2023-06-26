@@ -19,9 +19,10 @@ eventRoute
   );
 eventRoute.get('/user/:username', userController.getEventUser);
 eventRoute.get('/pending', eventController.getAllEventsPending);
+eventRoute.get('/suggestion', eventController.getSuggestionEvent);
+eventRoute.get('/:slug', eventController.getEvent);
 eventRoute
   .route('/:id')
-  .get(eventController.getEvent)
   .patch(authController.protect, eventController.updateEvent)
   .delete(authController.protect, eventController.deleteEventWithSeat);
 eventRoute

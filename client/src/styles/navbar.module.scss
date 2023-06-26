@@ -11,23 +11,59 @@
     justify-content: space-between;
     align-items: center;
     margin: 1rem 0;
-    flex-grow: 4;
+    width: 100%;
     a {
       text-decoration: none;
     }
-    .logo {
+    .header {
       margin-left: 2rem;
-      height: 4rem;
-      width: 4rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      .logo {
+        height: 3rem;
+        width: 3rem;
+      }
     }
-    .createEvent {
-      border: 2px solid #339af0;
-      border-radius: 10px;
-      padding: 0.6rem;
-      margin-right: 2rem;
-      color: #4dabf7;
-      &:hover {
-        color: #1864ab;
+    .control {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      .createEvent {
+        border: 2px solid #339af0;
+        border-radius: 10px;
+        padding: 0.6rem;
+        margin-right: 2rem;
+        text-align: center;
+        width: 10rem;
+        color: #4dabf7;
+        &:hover {
+          color: #1864ab;
+        }
+      }
+      .waitingList {
+        border: 2px solid #e03131;
+        border-radius: 10px;
+        padding: 0.6rem;
+        color: #ff8787;
+        text-align: center;
+        width: 10rem;
+        &:hover {
+          color: #c92a2a;
+        }
+      }
+      .eventAdmin {
+        border: 2px solid #339af0;
+        border-radius: 10px;
+        padding: 0.6rem;
+        text-align: center;
+        width: 10rem;
+        color: #4dabf7;
+        &:hover {
+          color: #1864ab;
+        }
       }
     }
   }

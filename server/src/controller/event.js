@@ -4,10 +4,21 @@ const User = require('../models/user');
 const { Seat } = require('../models/seat');
 const factory = require('./factory');
 const catchAsync = require('../utils/catchAsync');
+const slugify = require('slugify');
 
 exports.getAllEvents = factory.getAll(Event);
-exports.getEvent = factory.getOne(Event);
 exports.updateEvent = factory.updateOne(Event);
+//exports.getEvent = factory.getOne(Event);
+
+exports.getEvent = catchAsync(async (req, res, next) => {
+  const { slug } = req.params;
+  const event = await Event.findOne({ slug });
+  if (!event) {
+    return res.status(404).json({ error: 'Event not found' });
+  }
+
+  res.json(event);
+});
 
 exports.deleteEventWithSeat = catchAsync(async (req, res, next) => {
   const { id } = req.params;
@@ -34,7 +45,8 @@ exports.createEventWithSeat = catchAsync(async (req, res, next) => {
   const event = new Event({ ...data, user: user, image: req.body.image });
   const rows = event.row;
   const col = event.col;
-
+  const name = event.name;
+  const slug = slugify(name, { lower: true });
   if (
     typeof rows !== 'number' ||
     typeof col !== 'number' ||
@@ -62,6 +74,7 @@ exports.createEventWithSeat = catchAsync(async (req, res, next) => {
   if (user.role === 'admin') {
     event.isApproved = true;
   }
+  event.slug = slug;
   event.seats = createdSeats;
   event.seatAvailable = rows * col;
   await event.save();
@@ -87,4 +100,14 @@ exports.updateEventStatus = catchAsync(async (req, res, next) => {
   );
 
   res.status(200).json({ status: 'success', event });
+});
+
+exports.getSuggestionEvent = catchAsync(async (req, res, next) => {
+  const searchTerm = req.query.q;
+  if (!searchTerm) {
+    return res.json([]);
+  }
+  const suggestions = await Event.queryEvent(searchTerm);
+
+  res.status(200).json(suggestions);
 });

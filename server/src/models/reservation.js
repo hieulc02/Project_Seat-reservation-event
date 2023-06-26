@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const AppError = require('../utils/appError');
 
 const { Schema } = mongoose;
 
@@ -55,7 +56,7 @@ reservationSchema.statics.deleteReservationEvent = async function (id) {
       eventId: { $eq: id },
     });
   } catch (e) {
-    throw new Error('Fail to delete reservation!');
+    throw new AppError('Fail to delete reservation!', 400);
   }
 };
 

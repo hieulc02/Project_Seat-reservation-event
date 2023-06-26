@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const AppError = require('../utils/appError');
 const { Schema } = mongoose;
 
 const eventSchema = new Schema({
@@ -10,6 +11,11 @@ const eventSchema = new Schema({
     type: String,
     required: true,
     trim: true,
+    collation: { locale: 'en', strength: 2 },
+  },
+  slug: {
+    type: String,
+    unique: true,
   },
   description: {
     type: String,
@@ -65,6 +71,10 @@ const eventSchema = new Schema({
   },
   image: String,
 });
+eventSchema.index(
+  { name: 'text' },
+  { collation: { locale: 'en', strength: 2 } }
+);
 
 eventSchema.pre(/^find/, function (next) {
   this.populate({
@@ -85,10 +95,37 @@ eventSchema.statics.seatUpdated = async function (totalSeatReserved, eventId) {
       }
     );
   } catch (e) {
-    throw new Error('Invalid seat updated');
+    throw new AppError('Invalid seat updated', 400);
   }
 };
 
+eventSchema.statics.queryEvent = async function (searchTerm) {
+  try {
+    const suggestions = await this.aggregate([
+      {
+        $match: {
+          name: {
+            $regex: searchTerm,
+            $options: 'i',
+          },
+        },
+      },
+      { $limit: 5 },
+      {
+        $project: {
+          _id: 0,
+          slug: 1,
+          name: 1,
+          dateStart: 1,
+          venue: 1,
+        },
+      },
+    ]);
+    return suggestions;
+  } catch (e) {
+    throw new AppError('Fail for querying event', 400);
+  }
+};
 const Event = mongoose.model('Event', eventSchema);
 
 module.exports = Event;

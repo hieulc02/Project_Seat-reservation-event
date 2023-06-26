@@ -24,10 +24,13 @@ const Register = () => {
     try {
       const user = await signup(info);
       toast.success(user.status);
+      toast.success(
+        'We have sent an email confirmation to your email. Please confirm to log in'
+      );
       if (!user) return;
       Router.push(`/login`);
     } catch (e) {
-      setErrors(e.response.data.error);
+      setErrors(e.response?.data?.error);
     }
   };
   const handleChange = (name) => {

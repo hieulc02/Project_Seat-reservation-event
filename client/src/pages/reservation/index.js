@@ -16,13 +16,11 @@ const Reservation = ({ user }) => {
       try {
         const res = await getReservationByUser(user?._id);
         if (!res) return;
-        const data = res.userReservation;
-        console.log(data);
-        const doc = data.map((res) => res);
-        setUserReservation(doc);
+        setUserReservation(res.userReservation);
         setIsLoading(false);
       } catch (e) {
         console.log(e);
+        setIsLoading(true);
       }
     };
     if (user) {
@@ -48,9 +46,7 @@ const Reservation = ({ user }) => {
               <div className={styles.box}>
                 <div className={styles.dateContainer}>
                   Date:
-                  <div className={styles.date}>
-                    {moment(reservation?.date).format('DD/MM/YYYY')}
-                  </div>
+                  <div className={styles.date}>{reservation?.date}</div>
                 </div>
                 <div className={styles.eventContainer}>
                   Event:

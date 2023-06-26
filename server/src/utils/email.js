@@ -22,17 +22,20 @@ class Email {
       },
     });
   }
-  async send(subject) {
+  async send(subject, text) {
     const mailOptions = {
       from: this.from,
       to: this.to,
       subject,
-      text: `Please click the following link to confirm your email: ${this.url}`,
+      text,
     };
     await this.newTransport().sendMail(mailOptions);
   }
   async sendVerify() {
-    return await this.send('Verify email address for TicketDiv :>');
+    return await this.send(
+      'Verify email address for TicketDiv :>',
+      `Please click the following link to confirm your email: ${this.url}`
+    );
   }
 }
 

@@ -40,20 +40,18 @@ const createConfirmCode = (userId) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  const existUser = await User.findOne({
-    email: req.body.email,
-  });
+  const { email, name } = req.body;
+  const existUser = await User.findOne({ $or: [{ email }, { name }] });
   if (existUser) {
     return res.status(400).json({
-      error: 'Email already exists',
+      error: 'Email or name already exists',
     });
   }
   const user = new User({ ...req.body, role: req.body.role });
   const userId = user._id.toString();
   const confirmCode = createConfirmCode(userId);
   user.confirmCode = confirmCode;
-  await new Email(user).sendVerify();
-  await user.save();
+  await Promise.all([new Email(user).sendVerify(), user.save()]);
   createSendToken(user, 201, req, res);
 });
 
@@ -87,11 +85,11 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));
   }
-  if (!user.verified) {
-    return next(
-      new AppError('Email not confirmed. Please verify your email!', 401)
-    );
-  }
+  // if (!user.verified) {
+  //   return next(
+  //     new AppError('Email not confirmed. Please verify your email!', 401)
+  //   );
+  // }
   createSendToken(user, 200, req, res);
 });
 

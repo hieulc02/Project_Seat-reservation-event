@@ -9,10 +9,10 @@ import BookingCheckout from '../../components/checkout';
 import apiEndpoint from '../../apiConfig';
 import { checkAuthentication } from '../../auth';
 
-const Event = ({ id, user }) => {
+const Event = ({ slug, user }) => {
   const router = useRouter();
   const socket = useRef(null);
-  const eventRoom = `event/${id}`;
+  const eventRoom = `event/${slug}`;
   const [tempSeat, setTempSeat] = useState({});
   const [isTempSeat, setIsTempSeat] = useState(false);
   const [event, setEvent] = useState(null);
@@ -34,14 +34,15 @@ const Event = ({ id, user }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await getEvent(id);
+        const res = await getEvent(slug);
         setEvent(res);
+        console.log(res);
       } catch (e) {
         console.log(e);
       }
     };
     fetchData();
-  }, [id]);
+  }, [slug]);
 
   useEffect(() => {
     const handleRouteChange = (url) => {
@@ -120,6 +121,7 @@ const Event = ({ id, user }) => {
                         objectFit: 'cover',
                         objectPosition: 'center',
                         width: '100%',
+                        borderRadius: '10px',
                       }}
                     />
                   </div>
@@ -144,7 +146,8 @@ const Event = ({ id, user }) => {
                   </div>
                 </div>
                 <div className={styles.description}>
-                  <div className={styles.content}>{event.description}</div></div>
+                  <div className={styles.content}>{event.description}</div>
+                </div>
                 <div className={styles.seat}>
                   <div className={styles.seatWrapper}>
                     <div className={styles.hall}>
@@ -230,7 +233,7 @@ const Event = ({ id, user }) => {
 };
 
 export const getServerSideProps = async ({ req, params }) => {
-  const { id } = params;
+  const { slug } = params;
   const authenticationCheck = await checkAuthentication(req);
 
   if ('redirect' in authenticationCheck) {
@@ -238,7 +241,7 @@ export const getServerSideProps = async ({ req, params }) => {
   }
   return {
     props: {
-      id,
+      slug,
       user: authenticationCheck.user,
     },
   };

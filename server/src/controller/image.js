@@ -13,7 +13,11 @@ const bufferToStream = (buffer) => {
   return readable;
 };
 exports.imageToCloudinary = catchAsync(async (req, res, next) => {
-  const data = await sharp(req.file.buffer).webp({ quality: 20 }).toBuffer();
+  // const data = await sharp(req.file.buffer).webp({ quality: 100 }).toBuffer();
+  const data = await sharp(req.file.buffer)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toBuffer();
   const uploadRes = await cloudinary.uploader.upload_stream(
     {
       folder: 'event',

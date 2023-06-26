@@ -1,8 +1,7 @@
 import Link from 'next/link';
 import styles from '../styles/navbar.module.scss';
 import DropDownMenu from './dropdown';
-import QueryEvent from './event/query';
-const Navbar = () => {
+const NavbarAdmin = () => {
   return (
     <>
       <div className={styles.container}>
@@ -22,11 +21,14 @@ const Navbar = () => {
                 />
               </Link>
             </div>
-            <div className={styles.query}>
-              <QueryEvent />
-            </div>
           </div>
           <div className={styles.control}>
+            <Link href="/admin">
+              <div className={styles.eventAdmin}>Event Management</div>
+            </Link>
+            <Link href="/admin/waiting-list">
+              <div className={styles.waitingList}>Waiting List</div>
+            </Link>
             <Link href="/event/add-event">
               <div className={styles.createEvent}>Create Event</div>
             </Link>
@@ -38,4 +40,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NavbarAdmin;

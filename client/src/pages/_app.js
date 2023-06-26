@@ -7,7 +7,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <>
       <Component {...pageProps} />
-      <ToastContainer hideProgressBar={true} autoClose={1000} />
+      <ToastContainer hideProgressBar={true} autoClose={5000} />
     </>
   );
 }

@@ -73,12 +73,6 @@ const UpdateEvent = () => {
       <div className={styles.updateContainer}>
         <div className={styles.boxContainer}>
           <SearchBar onSearch={handleSearch} />
-          <div onClick={handleAddClick} className={styles.box}>
-            Add
-          </div>
-          <div onClick={handleWaitingList} className={styles.box}>
-            Waiting list
-          </div>
         </div>
         <table>
           <thead>

@@ -9,6 +9,7 @@ const SearchBar = ({ onSearch }) => {
           type="text"
           placeholder="Search..."
           value={searchTerm}
+          className={styles.search}
           onChange={(e) => {
             setSearchTerm(e.target.value);
             onSearch(e.target.value);

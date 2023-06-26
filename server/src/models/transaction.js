@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const AppError = require('../utils/appError');
 const { Schema } = mongoose;
 
 const transactionSchema = new Schema(
@@ -71,7 +72,7 @@ transactionSchema.statics.updateTransactionVerify = async function (id, user) {
       }
     );
   } catch (e) {
-    throw new Error('Update transaction fail!');
+    throw new AppError('Update transaction fail!', 400);
   }
 };
 
@@ -82,7 +83,7 @@ transactionSchema.statics.deleteTransactionFail = async function (user) {
       isVerified: false,
     });
   } catch (e) {
-    throw new Error('Delete fail');
+    throw new AppError('Delete transaction fail!', 400);
   }
 };
 

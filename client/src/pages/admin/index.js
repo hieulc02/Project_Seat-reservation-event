@@ -1,13 +1,14 @@
 import React from 'react';
-import Layout from '../../components/layout';
+import NavbarAdmin from '../../components/navbar_admin';
 import UpdateEvent from '../../components/event/update';
 import { checkAuthentication } from '../../auth';
 
 const Admin = () => {
   return (
-    <Layout>
+    <>
+      <NavbarAdmin />
       <UpdateEvent />
-    </Layout>
+    </>
   );
 };
 export const getServerSideProps = async ({ req }) => {

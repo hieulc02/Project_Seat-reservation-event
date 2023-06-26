@@ -34,10 +34,10 @@ export const getAllEvent = async (query = {}) => {
   return res.data.doc;
 };
 
-export const getEvent = async (id) => {
-  const res = await Axios.get(`/${id}`);
+export const getEvent = async (slug) => {
+  const res = await Axios.get(`/${slug}`);
   // console.log(res);
-  return res.data.doc;
+  return res.data;
 };
 
 export const getAllEventsPending = async () => {
@@ -63,5 +63,10 @@ export const updateEvent = async (id, updatedEvent) => {
 
 export const getEventUser = async (username) => {
   const res = await Axios.get(`/user/${username}`);
+  return res.data;
+};
+
+export const getSuggestionEvent = async (query) => {
+  const res = await Axios.get(`/suggestion?q=${query}`);
   return res.data;
 };

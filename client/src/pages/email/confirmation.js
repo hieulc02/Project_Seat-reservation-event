@@ -1,21 +1,33 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { verifyEmail } from '../../actions/authentication';
+import styles from '../../styles/email.module.scss';
 
 const EmailConfirm = ({ code }) => {
+  const [isValid, setIsValid] = useState(false);
+  const [status, setStatus] = useState('');
   useEffect(() => {
     const emailConfirm = async () => {
       try {
         const res = await verifyEmail(code);
-        console.log(res);
+        setStatus(res.status);
+        setIsValid(true);
       } catch (e) {
-        console.log(e);
+        setStatus(e.response?.data?.error);
+        setIsValid(false);
       }
     };
     emailConfirm();
   }, []);
   return (
     <>
-      <div>Successful</div>
+      <div className={styles.container}>
+        <div>{`${status}${isValid ? '✅' : '❌'}`}</div>
+        {isValid ? (
+          <div>Please head back to the main page to continue logging in.</div>
+        ) : (
+          <div>Please reconfirm your email!</div>
+        )}
+      </div>
     </>
   );
 };

@@ -9,6 +9,7 @@ import moment from 'moment';
 import io from 'socket.io-client';
 import apiEndpoint from '../../apiConfig';
 import { checkAuthentication } from '../../auth';
+import { FaMapMarkerAlt, FaDollarSign } from 'react-icons/fa';
 const ShowEvents = ({ events }) => {
   const socket = useRef(null);
   const [data, setData] = useState(events);
@@ -59,6 +60,7 @@ const ShowEvents = ({ events }) => {
         <div className={styles.optionContainer}>
           <div className={styles.optionWrapper}>
             <div className={styles.option}>
+              <FaMapMarkerAlt />
               <select
                 id="option-venue"
                 value={filter?.venue}
@@ -73,6 +75,7 @@ const ShowEvents = ({ events }) => {
               </select>
             </div>
             <div className={styles.option}>
+              <FaDollarSign />
               <select
                 id="option-price"
                 value={filter?.price}
@@ -110,7 +113,7 @@ const ShowEvents = ({ events }) => {
                       <div key={event._id}>
                         <div className={styles.eventCard}>
                           <Link
-                            href={`/event/${event._id}`}
+                            href={`/event/${event.slug}`}
                             className={styles.eventLink}
                           >
                             <div className={styles.image}>

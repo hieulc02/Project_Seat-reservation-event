@@ -12,6 +12,7 @@ import Layout from '../../components/layout';
 import Link from 'next/link';
 import { checkAuthentication } from '../../auth';
 import Loading from '../../components/loading';
+import NavbarAdmin from '../../components/navbar_admin';
 
 const WaitingList = () => {
   const socket = useRef(null);
@@ -57,7 +58,8 @@ const WaitingList = () => {
     }
   };
   return (
-    <Layout>
+    <>
+      <NavbarAdmin />
       {isLoading && <Loading />}
       <div className={styles.container}>
         <div className={styles.header}>Waiting list</div>
@@ -126,7 +128,7 @@ const WaitingList = () => {
           </React.Fragment>
         ))}
       </div>
-    </Layout>
+    </>
   );
 };
 export const getServerSideProps = async ({ req }) => {

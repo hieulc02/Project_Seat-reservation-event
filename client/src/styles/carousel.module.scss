@@ -1,0 +1,88 @@
+.container {
+  width: 45rem;
+}
+.nextArrow {
+  font-size: 0;
+  line-height: 0;
+  position: absolute;
+  top: 50%;
+  right: -25px;
+  display: block;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  transform: translate(0, -50%);
+  cursor: pointer;
+  outline: #4dabf7 solid 2px;
+  background: rgb(255, 255, 255);
+  border-radius: 50%;
+  &:hover {
+    background: #e9ecef;
+  }
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 11px;
+    height: 2px;
+    background-color: #1971c2;
+  }
+
+  &::before {
+    top: 5px;
+    left: 6px;
+    transform: rotate(45deg);
+    transform-origin: center;
+  }
+
+  &::after {
+    top: 12px;
+    left: 6px;
+    transform: rotate(-45deg);
+    transform-origin: center;
+  }
+}
+
+.prevArrow {
+  font-size: 0;
+  line-height: 0;
+  position: absolute;
+  top: 50%;
+  left: -25px;
+  display: block;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  transform: translate(0, -50%);
+  cursor: pointer;
+  outline: #4dabf7 solid 2px;
+  background: rgb(255, 255, 255);
+  border-radius: 50%;
+  &:hover {
+    background: #e9ecef;
+  }
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 11px;
+    height: 2px;
+    background-color: #1971c2;
+  }
+
+  &::before {
+    top: 5px;
+    right: 6px;
+    transform: rotate(-45deg);
+    transform-origin: center;
+  }
+
+  &::after {
+    top: 12px;
+    right: 6px;
+    transform: rotate(45deg);
+    transform-origin: center;
+  }
+}

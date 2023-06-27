@@ -131,7 +131,7 @@ const WaitingList = () => {
     </>
   );
 };
-export const getServerSideProps = async ({ req }) => {
+const getServerSideProps = async ({ req }) => {
   const authenticationCheck = await checkAuthentication(req);
 
   if ('redirect' in authenticationCheck) {

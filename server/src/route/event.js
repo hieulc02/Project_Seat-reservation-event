@@ -17,6 +17,7 @@ eventRoute
     imageController.imageToCloudinary,
     eventController.createEventWithSeat
   );
+
 eventRoute.get('/user/:username', userController.getEventUser);
 eventRoute.get('/pending', eventController.getAllEventsPending);
 eventRoute.get('/suggestion', eventController.getSuggestionEvent);

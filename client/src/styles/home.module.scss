@@ -1,0 +1,28 @@
+.container {
+  //background: yellow;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  .nav {
+    //background: green;
+  }
+  .wrapper {
+    margin-top: 1rem;
+    //  background: #74c0fc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .main {
+      border-radius: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background: #f8f9fa;
+      width: 60rem;
+      height: 200rem;
+      .carousel {
+        width: fit-content;
+        padding: 1rem;
+      }
+    }
+  }
+}

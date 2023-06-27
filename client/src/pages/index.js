@@ -2,11 +2,11 @@ import Head from 'next/head';
 import React from 'react';
 import styles from '../styles/home.module.scss';
 import Layout from '../components/layout';
-import axios from 'axios';
-import apiEndpoint from '../apiConfig';
 import Sidebar from '../components/sidebar';
+import Carousel from '../components/carousel';
+import { getAllEvent } from '../actions/event';
 
-const Home = ({ user }) => {
+const Home = ({ events }) => {
   return (
     <Layout>
       <div className={styles.container}>
@@ -14,11 +14,16 @@ const Home = ({ user }) => {
           <title>Event Seat Reservation</title>
           <link rel="icon" href="/favicon.ico" />
         </Head>
-
+        <nav className={styles.nav}>
+          <Sidebar />
+        </nav>
         <main>
-          <div className={styles.main}>
-            <div className={styles.carousel}></div>
-            <Sidebar />
+          <div className={styles.wrapper}>
+            <div className={styles.main}>
+              <div className={styles.carousel}>
+                <Carousel events={events} />
+              </div>
+            </div>
           </div>
         </main>
       </div>
@@ -45,22 +50,10 @@ export const getServerSideProps = async ({ req }) => {
     };
   }
   try {
-    const res = await axios.get(`${apiEndpoint}/api/users/me`, {
-      withCredentials: true,
-      headers: { Authorization: `Bearer ${jwtString}` },
-    });
-    const user = res.data.doc;
-    if (!user) {
-      return {
-        redirect: {
-          destination: '/login',
-          permanent: false,
-        },
-      };
-    }
+    const events = await getAllEvent();
     return {
       props: {
-        user,
+        events,
       },
     };
   } catch (e) {

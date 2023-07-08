@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import styles from '../styles/navbar.module.scss';
 import DropDownMenu from './dropdown';
+import AppConfig from '../config/appConfig';
+const { LOGO } = AppConfig;
 const NavbarAdmin = () => {
   return (
     <>
@@ -10,7 +12,7 @@ const NavbarAdmin = () => {
             <div className={styles.logo}>
               <Link href="/">
                 <img
-                  src="https://res.cloudinary.com/dbaoiiirg/image/upload/v1687157967/event/tihhuuje7oigzv6mboly.webp"
+                  src={LOGO.url}
                   alt="event picture"
                   style={{
                     objectFit: 'cover',

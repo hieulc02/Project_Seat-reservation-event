@@ -3,7 +3,12 @@ import { logout } from '../actions/authentication';
 import { toast } from 'react-toastify';
 import Router from 'next/router';
 import styles from '../styles/dropdown.module.scss';
-import { FaUserCircle, FaSignOutAlt, FaTicketAlt } from 'react-icons/fa';
+import {
+  FaUserCircle,
+  FaSignOutAlt,
+  FaTicketAlt,
+  FaCalendarCheck,
+} from 'react-icons/fa';
 
 import { getMe } from '../actions/authentication';
 const DropDown = () => {
@@ -40,6 +45,9 @@ const DropDown = () => {
   const handleReservation = () => {
     Router.push('/reservation');
   };
+  const handleMyEvent = () => {
+    Router.push(`/event/user/${user?.name}`);
+  };
   const handleClickOutside = (e) => {
     if (menuRef.current && !menuRef.current.contains(e.target)) {
       setOpen(false);
@@ -69,6 +77,10 @@ const DropDown = () => {
                 {' '}
                 <FaTicketAlt />
                 Reservation
+              </div>
+              <div onClick={handleMyEvent} className={styles.event}>
+                <FaCalendarCheck />
+                Event
               </div>
               <div onClick={handleLogOut} className={styles.logout}>
                 {' '}

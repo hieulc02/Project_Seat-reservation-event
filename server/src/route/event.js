@@ -17,20 +17,20 @@ eventRoute
     imageController.imageToCloudinary,
     eventController.createEventWithSeat
   );
-
+eventRoute.get('/latest', eventController.getLatestEvent);
 eventRoute.get('/user/:username', userController.getEventUser);
 eventRoute.get('/pending', eventController.getAllEventsPending);
 eventRoute.get('/suggestion', eventController.getSuggestionEvent);
 eventRoute.get('/:slug', eventController.getEvent);
+eventRoute.use(authController.protect);
+
 eventRoute
   .route('/:id')
-  .patch(authController.protect, eventController.updateEvent)
-  .delete(authController.protect, eventController.deleteEventWithSeat);
-eventRoute
-  .route('/status/:id')
-  .patch(
-    authController.protect,
-    authController.restrictTo('admin'),
-    eventController.updateEventStatus
-  );
+  .patch(eventController.updateEvent)
+  .delete(eventController.deleteEventWithSeat);
+eventRoute.patch(
+  '/status/:id',
+  authController.restrictTo('admin'),
+  eventController.updateEventStatus
+);
 module.exports = eventRoute;

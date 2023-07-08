@@ -18,7 +18,7 @@ const NextArrow = (props) => {
   );
 };
 const PrevArrow = (props) => {
-  const { className, style, onClick } = props;
+  const { style, onClick } = props;
   return (
     <div className={styles.prevArrow} style={{ ...style }} onClick={onClick} />
   );

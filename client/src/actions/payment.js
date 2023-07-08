@@ -1,4 +1,4 @@
-import apiEndpoint from '../apiConfig';
+import apiEndpoint from '../config/apiConfig';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 

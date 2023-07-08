@@ -38,7 +38,6 @@ const AddEvent = ({ user }) => {
   const handleSubmit = async () => {
     if (!selectedImage) return;
     const formData = new FormData();
-    console.log(event);
     formData.append('file', selectedImage);
     formData.append('data', JSON.stringify(event));
     formData.append('user', JSON.stringify(user));

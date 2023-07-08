@@ -7,7 +7,7 @@ import Loading from '../../components/loading';
 import React from 'react';
 import moment from 'moment';
 import io from 'socket.io-client';
-import apiEndpoint from '../../apiConfig';
+import apiEndpoint from '../../config/apiConfig';
 import { checkAuthentication } from '../../auth';
 import { FaMapMarkerAlt, FaDollarSign } from 'react-icons/fa';
 const ShowEvents = ({ events }) => {
@@ -165,7 +165,7 @@ export const getServerSideProps = async ({ req }) => {
     if ('redirect' in authenticationCheck) {
       return authenticationCheck;
     }
-    const events = await getAllEvent();
+    const events = await getAllEvent(12);
     return {
       props: {
         events,

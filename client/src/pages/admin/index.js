@@ -11,7 +11,7 @@ const Admin = () => {
     </>
   );
 };
-const getServerSideProps = async ({ req }) => {
+export const getServerSideProps = async ({ req }) => {
   const authenticationCheck = await checkAuthentication(req);
 
   if ('redirect' in authenticationCheck) {

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import apiEndpoint from './apiConfig';
+import apiEndpoint from './config/apiConfig';
 export const checkAuthentication = async (req) => {
   let jwtString = null;
   const keyValuePairs = req.headers?.cookie?.split('; ');

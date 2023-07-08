@@ -10,6 +10,16 @@ exports.getAllEvents = factory.getAll(Event);
 exports.updateEvent = factory.updateOne(Event);
 //exports.getEvent = factory.getOne(Event);
 
+const generateSlug = (name) => {
+  const pattern = /\[(.*?)\]|\((.*?)\)|[\[\]()]/g;
+  const extractedString = name.replace(pattern, '').trim();
+  const baseSlug = slugify(extractedString, { lower: true });
+  const randomNum = Math.floor(Math.random() * 10000);
+  const slug = `${baseSlug}-${randomNum}`;
+
+  return slug;
+};
+
 exports.getEvent = catchAsync(async (req, res, next) => {
   const { slug } = req.params;
   const event = await Event.findOne({ slug });
@@ -46,7 +56,7 @@ exports.createEventWithSeat = catchAsync(async (req, res, next) => {
   const rows = event.row;
   const col = event.col;
   const name = event.name;
-  const slug = slugify(name, { lower: true });
+  const slug = generateSlug(name);
   if (
     typeof rows !== 'number' ||
     typeof col !== 'number' ||
@@ -110,4 +120,10 @@ exports.getSuggestionEvent = catchAsync(async (req, res, next) => {
   const suggestions = await Event.queryEvent(searchTerm);
 
   res.status(200).json(suggestions);
+});
+
+exports.getLatestEvent = catchAsync(async (req, res, next) => {
+  const limit = parseInt(req.query.limit);
+  const events = await Event.find().sort({ createdAt: -1 }).limit(limit);
+  res.status(200).json(events);
 });

@@ -1,4 +1,4 @@
-import apiEndpoint from '../apiConfig';
+import apiEndpoint from '../config/apiConfig';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -32,6 +32,11 @@ export const getAllEvent = async (query = {}) => {
 
   const res = await Axios.get(url);
   return res.data.doc;
+};
+
+export const getLatestEvent = async (limit = 12) => {
+  const res = await Axios.get(`/latest?limit=${limit}`);
+  return res.data;
 };
 
 export const getEvent = async (slug) => {

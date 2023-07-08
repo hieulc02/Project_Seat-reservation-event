@@ -56,6 +56,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 2rem;
   .container {
     margin-top: 1rem;
     display: grid;
@@ -122,6 +123,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  font-family: Arial, Helvetica, sans-serif;
   .boxContainer {
     display: flex;
     gap: 5rem;
@@ -153,10 +155,25 @@
       border: 1px solid black;
       text-align: center;
       font-size: 2rem;
+      .approved {
+        background: #37b24d;
+        padding: 0.5rem;
+        color: #f8f9fa;
+        border-radius: 5px;
+        margin: 1rem;
+      }
+      .pending {
+        background: #ff922b;
+        padding: 0.5rem;
+        color: #f8f9fa;
+        border-radius: 5px;
+        margin: 1rem;
+      }
       .button {
         display: flex;
         justify-content: center;
         gap: 1rem;
+        margin: 1rem;
         .update {
           border: none;
           background: #339af0;

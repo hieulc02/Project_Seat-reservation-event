@@ -1,6 +1,3 @@
-import axios from 'axios';
-import moment from 'moment';
-import apiEndpoint from '../../apiConfig';
 import React, { useEffect, useState } from 'react';
 import styles from '../../styles/reservation.module.scss';
 import { getReservationByUser } from '../../actions/reservation';

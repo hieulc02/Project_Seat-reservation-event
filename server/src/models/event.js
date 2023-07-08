@@ -76,6 +76,7 @@ eventSchema.index(
   { collation: { locale: 'en', strength: 2 } }
 );
 
+eventSchema.index({ createdAt: -1 });
 eventSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'seats',

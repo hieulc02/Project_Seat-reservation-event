@@ -1,27 +1,87 @@
 .container {
-  //background: yellow;
   display: grid;
   grid-template-columns: auto 1fr;
-  .nav {
-    //background: green;
-  }
   .wrapper {
-    margin-top: 1rem;
-    //  background: #74c0fc;
+    margin: 1rem 0;
     display: flex;
     justify-content: center;
     align-items: center;
+    // margin-left: 30rem;
     .main {
       border-radius: 10px;
       display: flex;
-      justify-content: center;
-      align-items: flex-start;
+      justify-content: flex-start;
+      align-items: center;
+      flex-direction: column;
       background: #f8f9fa;
-      width: 60rem;
-      height: 200rem;
+      width: 70rem;
+      height: 80rem;
+      gap: 3rem;
       .carousel {
         width: fit-content;
         padding: 1rem;
+      }
+      .content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        gap: 1.5rem;
+        .header {
+          font-size: 2rem;
+          font-weight: bold;
+          line-height: 2rem;
+          color: #4dabf7;
+        }
+        .event {
+          width: 100%;
+        }
+        .btn_container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: relative;
+          width: 100%;
+          z-index: 1;
+
+          .button {
+            border: none;
+            background: #339af0;
+            color: #f1f3f5;
+            border-radius: 10px;
+            font-size: 1.5rem;
+            font-weight: bolder;
+            padding: 0.8rem;
+            cursor: pointer;
+            outline: none;
+            &:hover,
+            &:focus {
+              background: #2979c0;
+              color: #ece1e1;
+            }
+          }
+          &::after,
+          &::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            // width: calc(50% - 1em);
+            width: 25rem;
+            height: 2px;
+            background-color: #adb5bd;
+            transform: translateY(-50%);
+            z-index: -1;
+          }
+          &::after {
+            right: 0;
+            margin-right: 1rem;
+          }
+          &::before {
+            left: 0;
+            margin-left: 1rem;
+          }
+        }
       }
     }
   }

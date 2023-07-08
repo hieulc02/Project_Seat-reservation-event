@@ -6,7 +6,7 @@ import Loading from '../../components/loading';
 import io from 'socket.io-client';
 import styles from '../../styles/eventDetail.module.scss';
 import BookingCheckout from '../../components/checkout';
-import apiEndpoint from '../../apiConfig';
+import apiEndpoint from '../../config/apiConfig';
 import { checkAuthentication } from '../../auth';
 
 const Event = ({ slug, user }) => {
@@ -106,128 +106,125 @@ const Event = ({ slug, user }) => {
   }, [seatOccupied]);
   return (
     <>
-      <Layout>
-        {!event && <Loading />}
-        {event && (
-          <>
-            <div className={styles.event}>
-              <div className={styles.container}>
-                <div className={styles.header}>
-                  <div className={styles.image}>
-                    <img
-                      src={event.image}
-                      alt="event-image"
-                      style={{
-                        objectFit: 'cover',
-                        objectPosition: 'center',
-                        width: '100%',
-                        borderRadius: '10px',
-                      }}
-                    />
+      {!event && <Loading />}
+      {event && (
+        <Layout>
+          <div className={styles.event}>
+            <div className={styles.container}>
+              <div className={styles.header}>
+                <div className={styles.image}>
+                  <img
+                    src={event.image}
+                    alt="event-image"
+                    style={{
+                      objectFit: 'cover',
+                      objectPosition: 'center',
+                      width: '100%',
+                      borderRadius: '10px',
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={styles.body}>
+            <div className={styles.grid}>
+              <div className={styles.wrapper}>
+                <div className={styles.content}>
+                  <div className={styles.box}>
+                    <div className={styles.name}>{event.name}</div>
+                    <div className={styles.date}>
+                      <span>
+                        From: {event.dateStart} to {event.dateEnd}
+                      </span>
+                    </div>
+                    <div className={styles.venue}>
+                      <span>{event.venue}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.description}>
+                <div className={styles.content}>{event.description}</div>
+              </div>
+              <div className={styles.seat}>
+                <div className={styles.seatWrapper}>
+                  <div className={styles.hall}>
+                    {event?.seats.map((seatRow, indexRow) => (
+                      <div key={indexRow} className={styles.row}>
+                        {seatRow.map((seat, indexCol) => (
+                          <React.Fragment key={seat._id}>
+                            {seat.isOccupied ||
+                            seatOccupied.includes(seat._id) ? (
+                              <div
+                                style={{ background: 'rgb(65, 66, 70)' }}
+                                className={styles.occupied}
+                                key={`${indexRow}-${indexCol}`}
+                              >
+                                {seat.row} - {seat.col}
+                              </div>
+                            ) : (
+                              <div
+                                className={styles.seat}
+                                style={{
+                                  background: selectedSeats?.some(
+                                    (s) => s._id === seat._id
+                                  )
+                                    ? 'rgb(120, 205, 4)'
+                                    : setToRoom?.some(
+                                        (s) => s.seatId === seat._id && s.state
+                                      )
+                                    ? 'red'
+                                    : 'rgb(96, 93, 169)',
+                                }}
+                                key={`${indexRow}-${indexCol}`}
+                                onClick={() => handleSeatClick(seat)}
+                              >
+                                {seat.row} - {seat.col}
+                              </div>
+                            )}
+                          </React.Fragment>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                  <div className={styles.seatInfoContainer}>
+                    <div className={styles.seatInfo}>
+                      <div
+                        className={styles.seatLabel}
+                        style={{ background: 'rgb(96, 93, 169)' }}
+                      ></div>
+                      Available
+                    </div>
+                    <div className={styles.seatInfo}>
+                      <div
+                        className={styles.seatLabel}
+                        style={{ background: 'rgb(65, 66, 70)' }}
+                      ></div>
+                      Reserved
+                    </div>
+                    <div className={styles.seatInfo}>
+                      <div
+                        className={styles.seatLabel}
+                        style={{ background: 'rgb(120, 205, 4)' }}
+                      ></div>
+                      Selected
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-            <div className={styles.body}>
-              <div className={styles.grid}>
-                <div className={styles.wrapper}>
-                  <div className={styles.content}>
-                    <div className={styles.box}>
-                      <div className={styles.name}>{event.name}</div>
-                      <div className={styles.date}>
-                        <span>
-                          From: {event.dateStart} to {event.dateEnd}
-                        </span>
-                      </div>
-                      <div className={styles.venue}>
-                        <span>{event.venue}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className={styles.description}>
-                  <div className={styles.content}>{event.description}</div>
-                </div>
-                <div className={styles.seat}>
-                  <div className={styles.seatWrapper}>
-                    <div className={styles.hall}>
-                      {event?.seats.map((seatRow, indexRow) => (
-                        <div key={indexRow} className={styles.row}>
-                          {seatRow.map((seat, indexCol) => (
-                            <React.Fragment key={seat._id}>
-                              {seat.isOccupied ||
-                              seatOccupied.includes(seat._id) ? (
-                                <div
-                                  style={{ background: 'rgb(65, 66, 70)' }}
-                                  className={styles.occupied}
-                                  key={`${indexRow}-${indexCol}`}
-                                >
-                                  {seat.row} - {seat.col}
-                                </div>
-                              ) : (
-                                <div
-                                  className={styles.seat}
-                                  style={{
-                                    background: selectedSeats?.some(
-                                      (s) => s._id === seat._id
-                                    )
-                                      ? 'rgb(120, 205, 4)'
-                                      : setToRoom?.some(
-                                          (s) =>
-                                            s.seatId === seat._id && s.state
-                                        )
-                                      ? 'red'
-                                      : 'rgb(96, 93, 169)',
-                                  }}
-                                  key={`${indexRow}-${indexCol}`}
-                                  onClick={() => handleSeatClick(seat)}
-                                >
-                                  {seat.row} - {seat.col}
-                                </div>
-                              )}
-                            </React.Fragment>
-                          ))}
-                        </div>
-                      ))}
-                    </div>
-                    <div className={styles.seatInfoContainer}>
-                      <div className={styles.seatInfo}>
-                        <div
-                          className={styles.seatLabel}
-                          style={{ background: 'rgb(96, 93, 169)' }}
-                        ></div>
-                        Available
-                      </div>
-                      <div className={styles.seatInfo}>
-                        <div
-                          className={styles.seatLabel}
-                          style={{ background: 'rgb(65, 66, 70)' }}
-                        ></div>
-                        Reserved
-                      </div>
-                      <div className={styles.seatInfo}>
-                        <div
-                          className={styles.seatLabel}
-                          style={{ background: 'rgb(120, 205, 4)' }}
-                        ></div>
-                        Selected
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className={styles.checkout}>
-                <BookingCheckout
-                  selectedSeats={selectedSeats}
-                  ticketPrice={event?.ticketPrice}
-                  user={user}
-                  event={event}
-                />
-              </div>
+            <div className={styles.checkout}>
+              <BookingCheckout
+                selectedSeats={selectedSeats}
+                ticketPrice={event?.ticketPrice}
+                user={user}
+                event={event}
+              />
             </div>
-          </>
-        )}
-      </Layout>
+          </div>
+        </Layout>
+      )}
     </>
   );
 };

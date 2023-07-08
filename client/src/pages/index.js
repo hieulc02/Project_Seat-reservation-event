@@ -4,9 +4,15 @@ import styles from '../styles/home.module.scss';
 import Layout from '../components/layout';
 import Sidebar from '../components/sidebar';
 import Carousel from '../components/carousel';
-import { getAllEvent } from '../actions/event';
+import { getLatestEvent } from '../actions/event';
+import Event from '../components/event/get';
+import { useRouter } from 'next/router';
 
 const Home = ({ events }) => {
+  const router = useRouter();
+  const handleClick = () => {
+    router.push('/event');
+  };
   return (
     <Layout>
       <div className={styles.container}>
@@ -23,6 +29,17 @@ const Home = ({ events }) => {
               <div className={styles.carousel}>
                 <Carousel events={events} />
               </div>
+              <section className={styles.content}>
+                <div className={styles.header}>Featured Events</div>
+                <div className={styles.event}>
+                  <Event events={events} />
+                </div>
+                <div className={styles.btn_container}>
+                  <button className={styles.button} onClick={handleClick}>
+                    See more
+                  </button>
+                </div>
+              </section>
             </div>
           </div>
         </main>
@@ -31,26 +48,9 @@ const Home = ({ events }) => {
   );
 };
 
-export const getServerSideProps = async ({ req }) => {
-  let jwtString = null;
-  const keyValuePairs = req.headers?.cookie?.split('; ');
-  if (keyValuePairs) {
-    for (const pair of keyValuePairs) {
-      if (pair.startsWith('jwt=')) {
-        jwtString = pair.substring(4);
-        break;
-      }
-    }
-  } else {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    };
-  }
+export const getServerSideProps = async () => {
   try {
-    const events = await getAllEvent();
+    const events = await getLatestEvent(16);
     return {
       props: {
         events,

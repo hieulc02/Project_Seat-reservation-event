@@ -7,8 +7,7 @@ import {
 import styles from '../../styles/waitingList.module.scss';
 import { toast } from 'react-toastify';
 import io from 'socket.io-client';
-import apiEndpoint from '../../apiConfig';
-import Layout from '../../components/layout';
+import apiEndpoint from '../../config/apiConfig';
 import Link from 'next/link';
 import { checkAuthentication } from '../../auth';
 import Loading from '../../components/loading';
@@ -131,7 +130,7 @@ const WaitingList = () => {
     </>
   );
 };
-const getServerSideProps = async ({ req }) => {
+export const getServerSideProps = async ({ req }) => {
   const authenticationCheck = await checkAuthentication(req);
 
   if ('redirect' in authenticationCheck) {

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import apiEndpoint from '../apiConfig';
+import apiEndpoint from '../config/apiConfig';
 import Cookies from 'js-cookie';
 import Router from 'next/router';
 export const Axios = axios.create({

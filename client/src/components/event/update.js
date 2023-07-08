@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 import { getAllEvent, updateEvent, deleteEvent } from '../../actions/event';
 import styles from '../../styles/event.module.scss';
 import SearchBar from '../search';
-import Router from 'next/router';
 const UpdateEvent = () => {
   const venueOptions = ['HCMC', 'HaNoi', 'Others'];
   const [editMode, setEditMode] = useState(false);
@@ -56,12 +55,6 @@ const UpdateEvent = () => {
   const handleSearch = (searchTerm) => {
     setSearchTerm(searchTerm);
   };
-  const handleAddClick = () => {
-    Router.push('/event/add-event');
-  };
-  const handleWaitingList = () => {
-    Router.push('/admin/waiting-list');
-  };
   const filterEvent = event.filter((e) => {
     const name = e.name.toLowerCase();
     const description = e.description.toLowerCase();
@@ -94,7 +87,13 @@ const UpdateEvent = () => {
             {filterEvent?.map((e, i) =>
               editMode && editEventId === e?._id ? (
                 <tr key={i}>
-                  <td>{e.isApproved ? 'Approved' : 'Pending'}</td>
+                  <td>
+                    {e.isApproved ? (
+                      <div className={styles.approved}>Approved</div>
+                    ) : (
+                      <div className={styles.pending}>Pending</div>
+                    )}
+                  </td>
                   <td>
                     <img
                       src={e.image}
@@ -195,7 +194,13 @@ const UpdateEvent = () => {
                 </tr>
               ) : (
                 <tr key={i}>
-                  <td>{e.isApproved ? 'Approved' : 'Pending'}</td>
+                  <td>
+                    {e.isApproved ? (
+                      <div className={styles.approved}>Approved</div>
+                    ) : (
+                      <div className={styles.pending}>Pending</div>
+                    )}
+                  </td>
                   <td>
                     <img
                       src={e.image}

@@ -41,6 +41,10 @@ const transactionSchema = new Schema(
       type: String,
       require: true,
     },
+    type: {
+      type: String,
+      enum: ['vnPay', 'MoMo'],
+    },
     isVerified: {
       type: Boolean,
       default: false,

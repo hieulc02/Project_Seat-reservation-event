@@ -7,6 +7,7 @@ import Carousel from '../components/carousel';
 import { getLatestEvent } from '../actions/event';
 import Event from '../components/event/get';
 import { useRouter } from 'next/router';
+import Footer from '../components/footer';
 
 const Home = ({ events }) => {
   const router = useRouter();
@@ -44,6 +45,7 @@ const Home = ({ events }) => {
           </div>
         </main>
       </div>
+      <Footer />
     </Layout>
   );
 };

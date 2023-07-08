@@ -10,6 +10,7 @@ import io from 'socket.io-client';
 import apiEndpoint from '../../config/apiConfig';
 import { checkAuthentication } from '../../auth';
 import { FaMapMarkerAlt, FaDollarSign } from 'react-icons/fa';
+import Footer from '../../components/footer';
 const ShowEvents = ({ events }) => {
   const socket = useRef(null);
   const [data, setData] = useState(events);
@@ -156,6 +157,7 @@ const ShowEvents = ({ events }) => {
           </div>
         </div>
       </Layout>
+      <Footer />
     </>
   );
 };

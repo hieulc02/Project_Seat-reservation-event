@@ -1,2 +1,2 @@
-NT114.N21.MMCL
+My very first personal project at UIT. 
 
